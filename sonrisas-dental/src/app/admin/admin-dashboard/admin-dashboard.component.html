@@ -1,0 +1,117 @@
+<div class="dashboard">
+  <header class="dashboard__intro">
+    <h1>Dashboard</h1>
+    <p>Resumen general del consultorio</p>
+  </header>
+
+  @if (loading()) {
+    <div class="dashboard__state">Cargando estadísticas…</div>
+  } @else if (error()) {
+    <div class="dashboard__state dashboard__state--error">
+      {{ error() }}
+      <button type="button" (click)="loadStats()">Reintentar</button>
+    </div>
+  } @else {
+    <!-- Tarjetas de resumen -->
+    <section class="cards">
+      @for (card of cards(); track card.label) {
+        <article class="card" [style.--card-color]="card.color">
+          <span class="card__icon">{{ card.icon }}</span>
+          <div>
+            <p class="card__value">{{ card.value }}</p>
+            <p class="card__label">{{ card.label }}</p>
+          </div>
+        </article>
+      }
+    </section>
+
+    <div class="dashboard__grid">
+      <!-- Gráfica de citas por mes -->
+      <section class="panel panel--chart">
+        <h2>Citas por mes</h2>
+        @if (chartBars().length === 0) {
+          <p class="panel__empty">Todavía no hay citas registradas.</p>
+        } @else {
+          <div class="chart">
+            @for (bar of chartBars(); track bar.label) {
+              <div class="chart__col">
+                <span class="chart__count">{{ bar.count }}</span>
+                <div class="chart__bar" [style.height.%]="bar.heightPct || 2"></div>
+                <span class="chart__label">{{ bar.label }}</span>
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+      <!-- Servicios más solicitados -->
+      <section class="panel">
+        <h2>Servicios más solicitados</h2>
+        @if ((stats()?.topServices?.length ?? 0) === 0) {
+          <p class="panel__empty">Aún no hay citas para calcular esto.</p>
+        } @else {
+          <ul class="ranked-list">
+            @for (service of stats()!.topServices; track service.serviceId) {
+              <li>
+                <span>{{ service.name }}</span>
+                <strong>{{ service.appointmentsCount }}</strong>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      <!-- Próximas citas -->
+      <section class="panel">
+        <div class="panel__header">
+          <h2>Próximas citas</h2>
+          <a routerLink="/admin/citas">Ver todas</a>
+        </div>
+        @if ((stats()?.upcomingAppointments?.length ?? 0) === 0) {
+          <p class="panel__empty">No hay citas próximas.</p>
+        } @else {
+          <ul class="appointment-list">
+            @for (appt of stats()!.upcomingAppointments; track appt.id) {
+              <li>
+                <div class="appointment-list__date">{{ formatDate(appt.date) }}<br />{{ appt.startTime }}</div>
+                <div class="appointment-list__info">
+                  <p class="appointment-list__patient">{{ appt.patient.firstName }} {{ appt.patient.lastName }}</p>
+                  <p class="appointment-list__service">{{ appt.service.name }}</p>
+                </div>
+                <span class="badge" [style.--badge-color]="statusColor(appt.status)">
+                  {{ statusLabel(appt.status) }}
+                </span>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      <!-- Últimos pacientes registrados -->
+      <section class="panel">
+        <div class="panel__header">
+          <h2>Últimos pacientes registrados</h2>
+          <a routerLink="/admin/pacientes">Ver todos</a>
+        </div>
+        @if ((stats()?.recentPatients?.length ?? 0) === 0) {
+          <p class="panel__empty">Aún no hay pacientes registrados.</p>
+        } @else {
+          <ul class="patient-list">
+            @for (patient of stats()!.recentPatients; track patient.id) {
+              <li>
+                <div class="patient-list__avatar">{{ patient.firstName.charAt(0) }}{{ patient.lastName.charAt(0) }}</div>
+                <div class="patient-list__info">
+                  <p class="patient-list__name">{{ patient.firstName }} {{ patient.lastName }}</p>
+                  <p class="patient-list__email">{{ patient.email }}</p>
+                </div>
+                @if (!patient.isActive) {
+                  <span class="badge" style="--badge-color:#C62828">Inactivo</span>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    </div>
+  }
+</div>

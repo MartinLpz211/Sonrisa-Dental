@@ -1,0 +1,77 @@
+<section class="hero" id="inicio">
+
+  <!-- Decorative background blobs -->
+  <div class="hero__blob hero__blob--1" aria-hidden="true"></div>
+  <div class="hero__blob hero__blob--2" aria-hidden="true"></div>
+  <div class="hero__blob hero__blob--3" aria-hidden="true"></div>
+
+  <div class="hero__inner container">
+
+    <!-- Text side -->
+    <div class="hero__content">
+      <span class="section-label">Consultorio Dental · Querétaro</span>
+      <h1 class="hero__title">
+        Tu sonrisa es<br />
+        <span class="hero__title--accent">nuestra prioridad</span>
+      </h1>
+      <p class="hero__desc">
+        Brindamos atención odontológica profesional para toda la familia,
+        con tecnología moderna y un equipo comprometido con tu bienestar.
+      </p>
+      <div class="hero__actions">
+        <button class="btn btn--primary" (click)="scrollToContact()">
+          📅 Agendar cita
+        </button>
+        <a class="btn btn--ghost" href="tel:4421300183">
+          📞 (442) 130-0183
+        </a>
+      </div>
+      <!-- Trust badges -->
+      <div class="hero__badges">
+        <div class="badge">🦷 Más de 10 años de experiencia</div>
+        <div class="badge">👨‍👩‍👧‍👦 Atención familiar</div>
+        <div class="badge">🏅 Tratamientos certificados</div>
+      </div>
+    </div>
+
+    <!-- Illustration side -->
+    <div class="hero__visual" aria-hidden="true">
+      <div class="hero__card-float hero__card-float--main">
+        <!-- Tooth SVG illustration -->
+        <svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" class="tooth-svg">
+          <!-- Tooth glow -->
+          <ellipse cx="100" cy="110" rx="80" ry="90" fill="#E3F2FD" opacity="0.6"/>
+          <!-- Tooth shape -->
+          <path
+            d="M60 50 C40 50 30 70 30 90 C30 120 45 160 55 190 C60 205 70 210 80 200
+               C90 190 95 175 100 175 C105 175 110 190 120 200
+               C130 210 140 205 145 190 C155 160 170 120 170 90
+               C170 70 160 50 140 50 C125 50 115 60 100 60 C85 60 75 50 60 50 Z"
+            fill="white"
+            stroke="#90CAF9"
+            stroke-width="3"
+          />
+          <!-- Shine -->
+          <path
+            d="M70 70 C65 75 62 85 65 90"
+            stroke="white"
+            stroke-width="5"
+            stroke-linecap="round"
+            opacity="0.8"
+          />
+          <circle cx="80" cy="68" r="4" fill="white" opacity="0.6"/>
+          <!-- Blue accent line -->
+          <path d="M80 58 C88 54 112 54 120 58" stroke="#2196F3" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        </svg>
+
+        <div class="float-badge float-badge--smile">
+          😁 <span>¡Sonrisa perfecta!</span>
+        </div>
+        <div class="float-badge float-badge--check">
+          ✅ <span>Dolor cero</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

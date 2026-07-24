@@ -1,0 +1,54 @@
+<section class="page-header container">
+  <span class="section-label">Agendar cita</span>
+  <h1 class="section-title">Nuestros servicios</h1>
+  <p class="section-subtitle">Elige el servicio que necesitas y agenda tu cita en segundos.</p>
+</section>
+
+<section class="services container">
+  @if (loading()) {
+    <p class="empty-state">Cargando servicios…</p>
+  } @else if (services().length === 0) {
+    <p class="empty-state">No hay servicios disponibles por el momento.</p>
+  } @else {
+    <div class="services__grid">
+      @for (service of services(); track service.id) {
+        <article class="service-card">
+          @if (service.imageUrl) {
+            <img class="service-card__img" [src]="service.imageUrl" [alt]="service.name" />
+          } @else {
+            <div class="service-card__img service-card__img--placeholder">🦷</div>
+          }
+
+          <div class="service-card__body">
+            <h3 class="service-card__title">{{ service.name }}</h3>
+            <p class="service-card__desc">{{ service.description }}</p>
+
+            <div class="service-card__meta">
+              <span class="service-card__price">
+                {{ service.price | currency: 'MXN' : 'symbol' : '1.0-0' }}
+              </span>
+              <span class="service-card__duration">⏱ {{ service.duration }} min</span>
+            </div>
+
+            <button class="btn btn--primary" (click)="openBooking(service)">Agendar</button>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>
+
+@if (selectedService(); as service) {
+  <app-patient-book
+    [service]="service"
+    (closed)="closeBooking()"
+    (saved)="onBooked($event)"
+  ></app-patient-book>
+}
+
+@if (confirmation(); as apt) {
+  <div class="toast">
+    <span>✅ Cita agendada para el {{ apt.date | date: 'dd/MM/yyyy' }} a las {{ apt.startTime }}.</span>
+    <button class="toast__link" (click)="goToAppointments()">Ver mis citas</button>
+  </div>
+}

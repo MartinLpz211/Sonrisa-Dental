@@ -1,0 +1,31 @@
+<section class="page-header container">
+  <span class="section-label">Tu progreso</span>
+  <h1 class="section-title">Historial de tratamientos</h1>
+  <p class="section-subtitle">Todos los tratamientos que ya te realizamos.</p>
+</section>
+
+<section class="history container">
+  @if (loading()) {
+    <p class="empty-state">Cargando historial…</p>
+  } @else if (history().length === 0) {
+    <p class="empty-state">Todavía no tienes tratamientos finalizados.</p>
+  } @else {
+    <ol class="timeline">
+      @for (item of history(); track item.id) {
+        <li class="timeline__item">
+          <span class="timeline__dot"></span>
+          <div class="timeline__content">
+            <div class="timeline__top">
+              <h3 class="timeline__service">{{ item.service.name }}</h3>
+              <span class="timeline__badge" [ngClass]="statusClass(item.status)">
+                {{ statusLabel(item.status) }}
+              </span>
+            </div>
+            <p class="timeline__date">{{ item.date | date: "dd 'de' MMMM, yyyy" }}</p>
+            <p class="timeline__doctor">👨‍⚕️ Doctor: No asignado en el sistema</p>
+          </div>
+        </li>
+      }
+    </ol>
+  }
+</section>

@@ -1,0 +1,191 @@
+<section class="legal-header">
+  <div class="container">
+    <span class="section-label">Información legal</span>
+    <h1 class="section-title">Términos, privacidad y derechos ARCO</h1>
+    <p class="section-subtitle">
+      Toda la información legal sobre el uso de este sitio y el tratamiento de tus datos personales.
+    </p>
+  </div>
+</section>
+
+<section class="legal container" id="legal-content">
+  <aside class="legal-tabs" role="tablist" aria-label="Secciones legales">
+    @for (s of sections; track s.id) {
+      <button
+        class="legal-tab"
+        [class.legal-tab--active]="active() === s.id"
+        role="tab"
+        [attr.aria-selected]="active() === s.id"
+        (click)="show(s.id)"
+      >
+        {{ s.label }}
+      </button>
+    }
+  </aside>
+
+  <article class="legal-content">
+    @if (active() === 'terminos') {
+      <div class="legal-doc">
+        <h2>Términos y Condiciones de Uso</h2>
+        <p class="legal-doc__updated">Última actualización: enero de 2026</p>
+
+        <p>
+          Bienvenido(a) al sitio web de Sonrisas — DentalCare. Al acceder y utilizar este sitio
+          web, usted acepta los presentes Términos y Condiciones de Uso. Si no está de acuerdo
+          con cualquiera de ellos, le recomendamos no utilizar nuestros servicios digitales.
+        </p>
+
+        <h3>1. Identificación del responsable</h3>
+        <p>
+          El presente sitio web es operado por Sonrisas — DentalCare, con domicilio en Av. Pie de
+          la Cuesta 2501, Nacional, 76148 Santiago de Querétaro, Qro., responsable de proporcionar
+          información sobre los servicios odontológicos ofrecidos, así como de la gestión de citas
+          y atención a pacientes.
+        </p>
+
+        <h3>2. Objeto del sitio web</h3>
+        <p>Este sitio tiene como finalidad:</p>
+        <ul>
+          <li>Brindar información sobre los servicios odontológicos.</li>
+          <li>Permitir a los usuarios solicitar o agendar citas.</li>
+          <li>Facilitar la comunicación entre pacientes y el consultorio.</li>
+          <li>Compartir información relacionada con promociones, horarios y ubicación.</li>
+        </ul>
+        <p>
+          La información publicada tiene fines informativos y no sustituye una consulta
+          odontológica profesional.
+        </p>
+
+        <h3>3. Registro de usuarios</h3>
+        <p>Para utilizar ciertos servicios, el usuario podrá proporcionar información personal como:</p>
+        <ul>
+          <li>Nombre completo.</li>
+          <li>Correo electrónico.</li>
+          <li>Número telefónico.</li>
+          <li>Fecha de nacimiento (cuando sea necesaria).</li>
+          <li>Información relacionada con la cita solicitada.</li>
+        </ul>
+        <p>El usuario declara que la información proporcionada es verdadera, completa y actualizada.</p>
+
+        <h3>4. Agendamiento y cancelación de citas</h3>
+        <p>El usuario acepta que:</p>
+        <ul>
+          <li>La solicitud de una cita no garantiza su confirmación hasta recibir la validación por parte del consultorio.</li>
+          <li>Las citas podrán modificarse por causas médicas, administrativas o de fuerza mayor.</li>
+          <li>El paciente podrá cancelar o reprogramar su cita con la anticipación establecida por el consultorio.</li>
+          <li>En caso de inasistencia reiterada sin previo aviso, el consultorio podrá restringir futuras reservaciones.</li>
+        </ul>
+
+        <h3>5. Obligaciones del usuario</h3>
+        <p>El usuario se compromete a:</p>
+        <ul>
+          <li>Utilizar el sitio conforme a la ley.</li>
+          <li>No proporcionar información falsa.</li>
+          <li>No realizar actividades que afecten el funcionamiento del sitio.</li>
+          <li>No intentar acceder sin autorización a sistemas o bases de datos.</li>
+        </ul>
+
+        <h3>6. Propiedad intelectual</h3>
+        <p>Todo el contenido del sitio web, incluyendo logotipos, imágenes, fotografías, textos, diseños, código fuente y material gráfico, es propiedad de Sonrisas — DentalCare o de sus respectivos titulares y está protegido por la legislación aplicable sobre propiedad intelectual.</p>
+        <p>Queda prohibida su reproducción total o parcial sin autorización previa por escrito.</p>
+
+        <h3>7. Limitación de responsabilidad</h3>
+        <p>El consultorio no garantiza que el sitio web se encuentre disponible de manera ininterrumpida. No será responsable por:</p>
+        <ul>
+          <li>Fallas de Internet.</li>
+          <li>Problemas ocasionados por terceros.</li>
+          <li>Virus informáticos ajenos al sitio.</li>
+          <li>Daños derivados del uso indebido del portal.</li>
+        </ul>
+
+        <h3>8. Modificaciones</h3>
+        <p>El consultorio podrá modificar los presentes términos en cualquier momento. Las modificaciones entrarán en vigor desde su publicación en este sitio web.</p>
+
+        <h3>9. Legislación aplicable</h3>
+        <p>Estos términos se rigen por las leyes vigentes de los Estados Unidos Mexicanos. Cualquier controversia será sometida a los tribunales competentes del domicilio del consultorio.</p>
+      </div>
+    }
+
+    @if (active() === 'privacidad') {
+      <div class="legal-doc">
+        <h2>Aviso de Privacidad</h2>
+        <p class="legal-doc__updated">Resumen — Ley Federal de Protección de Datos Personales en Posesión de los Particulares</p>
+
+        <p>
+          En cumplimiento de la Ley Federal de Protección de Datos Personales en Posesión de los
+          Particulares, Sonrisas — DentalCare informa que los datos personales proporcionados
+          serán utilizados para:
+        </p>
+        <ul>
+          <li>Agendar citas.</li>
+          <li>Confirmar o modificar consultas.</li>
+          <li>Llevar el expediente administrativo del paciente.</li>
+          <li>Contactar al paciente.</li>
+          <li>Facturación (cuando aplique).</li>
+          <li>Cumplimiento de obligaciones legales.</li>
+        </ul>
+        <p>Los datos personales no serán compartidos con terceros salvo en los casos previstos por la ley.</p>
+
+        <h3>Uso de cookies</h3>
+        <p>Este sitio puede utilizar cookies para:</p>
+        <ul>
+          <li>Mejorar la experiencia del usuario.</li>
+          <li>Recordar preferencias.</li>
+          <li>Obtener estadísticas de navegación.</li>
+          <li>Optimizar el funcionamiento del sitio.</li>
+        </ul>
+        <p>El usuario puede deshabilitar las cookies desde la configuración de su navegador.</p>
+
+        <h3>Protección de la información</h3>
+        <p>El consultorio implementa medidas administrativas, técnicas y físicas para proteger la información personal contra acceso no autorizado, alteración, pérdida, uso indebido y divulgación.</p>
+      </div>
+    }
+
+    @if (active() === 'arco') {
+      <div class="legal-doc">
+        <h2>Derechos ARCO</h2>
+        <p>
+          De conformidad con la LFPDPPP, el titular de los datos personales podrá ejercer en
+          cualquier momento sus Derechos ARCO:
+        </p>
+
+        <div class="arco-grid">
+          <div class="arco-card">
+            <h4>Acceso</h4>
+            <p>Conocer qué datos personales posee el consultorio y para qué son utilizados.</p>
+          </div>
+          <div class="arco-card">
+            <h4>Rectificación</h4>
+            <p>Solicitar la corrección de datos personales cuando sean inexactos, incompletos o desactualizados.</p>
+          </div>
+          <div class="arco-card">
+            <h4>Cancelación</h4>
+            <p>Solicitar la eliminación de sus datos personales cuando considere que no están siendo tratados conforme a la ley. La cancelación podrá no proceder cuando exista obligación legal de conservar cierta información.</p>
+          </div>
+          <div class="arco-card">
+            <h4>Oposición</h4>
+            <p>Solicitar que sus datos personales no sean utilizados para determinadas finalidades.</p>
+          </div>
+        </div>
+
+        <h3>Procedimiento para ejercer los Derechos ARCO</h3>
+        <p>El titular podrá presentar su solicitud mediante:</p>
+        <ul>
+          <li>Correo electrónico: <a href="mailto:contacto@gmail.com">contacto&#64;gmail.com</a></li>
+          <li>Teléfono: <a href="tel:4421300183">(442) 130-0183</a></li>
+          <li>Domicilio: Av. Pie de la Cuesta 2501, Nacional, 76148 Santiago de Querétaro, Qro.</li>
+        </ul>
+
+        <p>La solicitud deberá contener:</p>
+        <ul>
+          <li>Nombre completo del titular.</li>
+          <li>Documento que acredite su identidad.</li>
+          <li>Descripción clara del derecho que desea ejercer.</li>
+          <li>Datos de contacto para recibir la respuesta.</li>
+        </ul>
+
+        <p>El consultorio responderá dentro de los plazos establecidos por la legislación mexicana.</p>
+      </div>
+    }
+  </article>
+</section>

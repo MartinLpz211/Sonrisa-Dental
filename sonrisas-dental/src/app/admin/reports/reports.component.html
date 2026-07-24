@@ -1,0 +1,120 @@
+<div class="reports-admin">
+  <header class="reports-admin__intro">
+    <h1>Reportes</h1>
+    <p>Ingresos, citas y pacientes nuevos en el periodo que elijas.</p>
+  </header>
+
+  <!-- Filtros de rango -->
+  <div class="toolbar">
+    <div class="presets">
+      <button type="button" class="chip" [class.chip--active]="activePreset() === 'today'" (click)="applyPreset('today')">Hoy</button>
+      <button type="button" class="chip" [class.chip--active]="activePreset() === 'week'" (click)="applyPreset('week')">Esta semana</button>
+      <button type="button" class="chip" [class.chip--active]="activePreset() === 'month'" (click)="applyPreset('month')">Este mes</button>
+      <button type="button" class="chip" [class.chip--active]="activePreset() === 'last30'" (click)="applyPreset('last30')">Últimos 30 días</button>
+    </div>
+
+    <div class="range-picker">
+      <input type="date" [value]="dateFrom()" (change)="onDateFromChange($any($event.target).value)" />
+      <span>a</span>
+      <input type="date" [value]="dateTo()" (change)="onDateToChange($any($event.target).value)" />
+      <button type="button" class="btn btn--primary" (click)="applyCustomRange()">Aplicar</button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="state state--error">
+      {{ error() }}
+      <button type="button" (click)="loadSummary()">Reintentar</button>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="state">Generando reporte…</div>
+  } @else if (summary()) {
+    <!-- Tarjetas resumen -->
+    <div class="cards">
+      @for (card of cards(); track card.label) {
+        <div class="card">
+          <span class="card__icon">{{ card.icon }}</span>
+          <div>
+            <div class="card__value">
+              {{ card.isCurrency ? (card.value | currency:'MXN') : card.value }}
+            </div>
+            <div class="card__label">{{ card.label }}</div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="reports-grid">
+      <!-- Gráfica de citas por día -->
+      <section class="panel">
+        <h2>Citas por día</h2>
+        @if (chartBars().length === 0) {
+          <p class="state">No hay citas en este periodo.</p>
+        } @else {
+          <div class="bar-chart">
+            @for (bar of chartBars(); track bar.label) {
+              <div class="bar-chart__col" [title]="bar.count + ' citas · ' + (bar.revenue | currency:'MXN')">
+                <div class="bar-chart__bar" [style.height.%]="bar.heightPct"></div>
+                <span class="bar-chart__label">{{ bar.label }}</span>
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+      <!-- Desglose por estado -->
+      <section class="panel">
+        <h2>Citas por estado</h2>
+        @if (statusRows().length === 0) {
+          <p class="state">Sin datos.</p>
+        } @else {
+          <ul class="status-list">
+            @for (row of statusRows(); track row.status) {
+              <li>
+                <div class="status-list__top">
+                  <span class="status-list__dot" [style.background]="row.color"></span>
+                  <span>{{ row.label }}</span>
+                  <strong>{{ row.count }}</strong>
+                </div>
+                <div class="status-list__bar">
+                  <div class="status-list__fill" [style.width.%]="row.pct" [style.background]="row.color"></div>
+                </div>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    </div>
+
+    <!-- Tabla por servicio -->
+    <section class="panel">
+      <h2>Ingresos por servicio</h2>
+      @if (summary()!.byService.length === 0) {
+        <p class="state">No hay citas en este periodo.</p>
+      } @else {
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Servicio</th>
+                <th>Citas</th>
+                <th>Ingresos (completadas)</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of summary()!.byService; track row.serviceId) {
+                <tr>
+                  <td class="table__name">{{ row.name }}</td>
+                  <td>{{ row.count }}</td>
+                  <td>{{ row.revenue | currency:'MXN' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  }
+</div>

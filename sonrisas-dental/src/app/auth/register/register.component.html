@@ -1,0 +1,78 @@
+<section class="auth-page">
+  <div class="auth-card">
+    <h1 class="auth-card__title">Crear cuenta</h1>
+    <p class="auth-card__subtitle">Regístrate para agendar tus citas en Sonrisas Dental</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+      <div class="form__row">
+        <div class="form__group">
+          <label class="form__label" for="firstName">Nombre</label>
+          <input id="firstName" type="text" class="form__input" formControlName="firstName" autocomplete="given-name" />
+          @if (firstName.invalid && firstName.touched) {
+            <span class="form__error">Ingresa tu nombre.</span>
+          }
+        </div>
+
+        <div class="form__group">
+          <label class="form__label" for="lastName">Apellido</label>
+          <input id="lastName" type="text" class="form__input" formControlName="lastName" autocomplete="family-name" />
+          @if (lastName.invalid && lastName.touched) {
+            <span class="form__error">Ingresa tu apellido.</span>
+          }
+        </div>
+      </div>
+
+      <div class="form__group">
+        <label class="form__label" for="email">Correo electrónico</label>
+        <input id="email" type="email" class="form__input" formControlName="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" />
+        @if (email.invalid && email.touched) {
+          <span class="form__error">
+            @if (email.hasError('required')) { Ingresa tu correo. }
+            @if (email.hasError('email')) { El correo no es válido. }
+          </span>
+        }
+      </div>
+
+      <div class="form__group">
+        <label class="form__label" for="phone">Teléfono (opcional)</label>
+        <input id="phone" type="tel" class="form__input" formControlName="phone" autocomplete="tel" />
+      </div>
+
+      <div class="form__group">
+        <label class="form__label" for="password">Contraseña</label>
+        <input id="password" type="password" class="form__input" formControlName="password" autocomplete="new-password" placeholder="Mínimo 8 caracteres" />
+        @if (password.invalid && password.touched) {
+          <span class="form__error">
+            @if (password.hasError('required')) { Ingresa una contraseña. }
+            @if (password.hasError('minlength')) { Debe tener al menos 8 caracteres. }
+          </span>
+        }
+      </div>
+
+      <div class="form__group">
+        <label class="form__label" for="confirmPassword">Confirmar contraseña</label>
+        <input id="confirmPassword" type="password" class="form__input" formControlName="confirmPassword" autocomplete="new-password" />
+        @if (confirmPassword.touched && (confirmPassword.hasError('required') || passwordsMismatch)) {
+          <span class="form__error">
+            @if (confirmPassword.hasError('required')) { Confirma tu contraseña. }
+            @else if (passwordsMismatch) { Las contraseñas no coinciden. }
+          </span>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <p class="auth-card__error">{{ errorMessage() }}</p>
+      }
+
+      <button type="submit" class="btn-submit" [disabled]="loading()">
+        @if (loading()) { <span class="spinner"></span> }
+        {{ loading() ? 'Creando cuenta…' : 'Crear cuenta' }}
+      </button>
+    </form>
+
+    <p class="auth-card__switch">
+      ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+    </p>
+  </div>
+</section>

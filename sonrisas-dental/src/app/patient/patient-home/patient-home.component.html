@@ -1,0 +1,61 @@
+<section class="patient-hero">
+  <div class="patient-hero__blob patient-hero__blob--1" aria-hidden="true"></div>
+  <div class="patient-hero__blob patient-hero__blob--2" aria-hidden="true"></div>
+
+  <div class="patient-hero__inner container">
+    <span class="section-label">Panel del paciente</span>
+    <h1 class="patient-hero__title">
+      Hola, {{ user()?.firstName }} 👋
+    </h1>
+    <p class="patient-hero__desc">Bienvenido/a de nuevo. ¿Qué deseas hacer hoy?</p>
+
+    <div class="patient-hero__actions">
+      <button class="btn btn--primary" (click)="goTo('/paciente/servicios')">
+        📅 Agendar cita
+      </button>
+      <button class="btn btn--ghost" (click)="goTo('/paciente/citas')">
+        🗂️ Ver mis citas
+      </button>
+      <button class="btn btn--ghost" (click)="goTo('/paciente/perfil')">
+        👤 Editar perfil
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="summary container">
+  <div class="summary__grid">
+    <article class="summary-card">
+      <span class="summary-card__icon">📅</span>
+      <span class="summary-card__label">Próxima cita</span>
+      @if (loading()) {
+        <span class="summary-card__value summary-card__value--muted">Cargando…</span>
+      } @else if (nextAppointment(); as apt) {
+        <span class="summary-card__value">{{ apt.date | date: 'dd/MM/yyyy' }} · {{ apt.startTime }}</span>
+        <span class="summary-card__hint">{{ apt.service.name }}</span>
+      } @else {
+        <span class="summary-card__value summary-card__value--muted">Sin citas próximas</span>
+      }
+    </article>
+
+    <article class="summary-card">
+      <span class="summary-card__icon">🗂️</span>
+      <span class="summary-card__label">Total de citas</span>
+      <span class="summary-card__value">{{ loading() ? '—' : totalAppointments() }}</span>
+    </article>
+
+    <article class="summary-card">
+      <span class="summary-card__icon">🦷</span>
+      <span class="summary-card__label">Tratamientos realizados</span>
+      <span class="summary-card__value">{{ loading() ? '—' : completedCount() }}</span>
+    </article>
+
+    <article class="summary-card">
+      <span class="summary-card__icon">✅</span>
+      <span class="summary-card__label">Estado de la cuenta</span>
+      <span class="summary-card__value summary-card__value--ok">
+        {{ user()?.isActive ? 'Activa' : 'Inactiva' }}
+      </span>
+    </article>
+  </div>
+</section>

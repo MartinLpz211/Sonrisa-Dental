@@ -1,0 +1,110 @@
+.calendar-admin__intro h1 { font-family: var(--font-display); color: var(--color-dark); font-size: 1.6rem; }
+.calendar-admin__intro p { color: var(--color-gray-text); margin: 0.25rem 0 1.5rem; }
+
+.toast {
+  background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7;
+  border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-bottom: 1rem;
+  font-weight: 600; font-size: 0.9rem;
+}
+
+.calendar-nav {
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;
+}
+.calendar-nav__label {
+  font-family: var(--font-display); color: var(--color-dark); text-transform: capitalize; flex: 1;
+}
+
+.state {
+  background: var(--color-white); border-radius: var(--radius-md); padding: 1.5rem;
+  text-align: center; color: var(--color-gray-text);
+}
+.state--error { color: #C62828; }
+.state--error button {
+  display: block; margin: 1rem auto 0; padding: 0.5rem 1.25rem;
+  background: var(--color-primary); color: white; border-radius: var(--radius-sm); font-weight: 700;
+}
+
+.calendar-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
+  background: var(--color-white); border-radius: var(--radius-md); padding: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+.calendar-grid__weekday {
+  text-align: center; font-size: 0.75rem; font-weight: 700; color: var(--color-gray-text);
+  text-transform: uppercase; padding-bottom: 0.5rem;
+}
+.calendar-cell {
+  position: relative; aspect-ratio: 1; border: 1px solid var(--color-gray-light);
+  border-radius: var(--radius-sm); background: var(--color-white);
+  display: flex; align-items: flex-start; justify-content: flex-start; padding: 0.4rem;
+  cursor: pointer; transition: background var(--transition);
+}
+.calendar-cell:hover { background: var(--color-primary-light); }
+.calendar-cell--muted { opacity: 0.35; }
+.calendar-cell--past { background: var(--color-gray-light); }
+.calendar-cell--today { border-color: var(--color-primary); border-width: 2px; }
+.calendar-cell__num { font-size: 0.85rem; font-weight: 600; color: var(--color-text); }
+.calendar-cell__badge {
+  position: absolute; bottom: 6px; right: 6px; background: var(--color-primary); color: white;
+  font-size: 0.7rem; font-weight: 700; border-radius: 999px; min-width: 18px; height: 18px;
+  display: flex; align-items: center; justify-content: center; padding: 0 4px;
+}
+
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45);
+  display: flex; align-items: center; justify-content: center; z-index: 50; padding: 1rem;
+}
+.day-panel, .modal {
+  background: var(--color-white); border-radius: var(--radius-md); padding: 1.75rem;
+  width: 100%; max-width: 460px; box-shadow: var(--shadow-lg); max-height: 90vh; overflow-y: auto;
+}
+.day-panel__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.day-panel__header h2 { font-family: var(--font-display); color: var(--color-dark); text-transform: capitalize; font-size: 1.1rem; }
+.day-panel__new { margin-bottom: 1rem; }
+.day-panel__list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+.day-panel__item {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem;
+  padding: 0.75rem; border: 1px solid var(--color-gray-light); border-radius: var(--radius-sm);
+}
+.day-panel__service { color: var(--color-gray-text); font-size: 0.85rem; margin: 0.15rem 0 0.35rem; }
+
+.modal h2 { font-family: var(--font-display); color: var(--color-dark); margin-bottom: 1.25rem; font-size: 1.2rem; }
+
+.field { margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.35rem; position: relative; }
+.field label { font-size: 0.8rem; font-weight: 700; color: var(--color-text); }
+.field input, .field select, .field textarea {
+  padding: 0.6rem 0.75rem; border: 1px solid var(--color-gray-mid); border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-size: 0.9rem; resize: vertical;
+}
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--color-primary); }
+.field__hint { font-size: 0.78rem; color: var(--color-gray-text); }
+.field__error { color: #C62828; font-size: 0.75rem; }
+.field__error--form { margin-bottom: 1rem; text-align: center; }
+
+.patient-results {
+  list-style: none; border: 1px solid var(--color-gray-mid); border-radius: var(--radius-sm);
+  max-height: 160px; overflow-y: auto; background: var(--color-white);
+}
+.patient-results li { padding: 0.5rem 0.75rem; font-size: 0.85rem; cursor: pointer; }
+.patient-results li:hover { background: var(--color-primary-light); }
+
+.slots { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.slot {
+  padding: 0.4rem 0.75rem; border: 1px solid var(--color-gray-mid); border-radius: var(--radius-sm);
+  background: var(--color-white); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+}
+.slot--selected { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+
+.badge { font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px; }
+.badge--pendiente { color: #E65100; background: #FFF3E0; }
+.badge--confirmada { color: #1565C0; background: #E3F2FD; }
+.badge--completada { color: #2E7D32; background: #E8F5E9; }
+.badge--cancelada { color: #C62828; background: #FFEBEE; }
+.badge--reagendada { color: #6A1B9A; background: #F3E5F5; }
+
+.btn { padding: 0.45rem 0.9rem; border-radius: var(--radius-sm); font-size: 0.82rem; font-weight: 700; }
+.btn--ghost { background: transparent; color: var(--color-primary-dark); border: 1px solid var(--color-gray-mid); }
+.btn--primary { background: var(--color-primary); color: white; border: none; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.modal__actions { display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.25rem; }

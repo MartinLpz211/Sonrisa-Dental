@@ -1,0 +1,69 @@
+<section class="page-header container">
+  <span class="section-label">Tu agenda</span>
+  <h1 class="section-title">Mis citas</h1>
+  <p class="section-subtitle">Consulta, reagenda o cancela tus citas.</p>
+</section>
+
+@if (message(); as msg) {
+  <div class="container">
+    <div class="alert" [class.alert--error]="msg.type === 'error'">{{ msg.text }}</div>
+  </div>
+}
+
+<section class="appointments container">
+  @if (loading()) {
+    <p class="empty-state">Cargando tus citas…</p>
+  } @else if (appointments().length === 0) {
+    <div class="empty-state">
+      <p>Todavía no tienes citas registradas.</p>
+      <a class="btn btn--primary" routerLink="/paciente/servicios">Agendar mi primera cita</a>
+    </div>
+  } @else {
+    <div class="appointments__grid">
+      @for (apt of appointments(); track apt.id) {
+        <article class="apt-card" [ngClass]="statusClass(apt.status)">
+          @if (apt.service.imageUrl) {
+            <img class="apt-card__img" [src]="apt.service.imageUrl" [alt]="apt.service.name" />
+          } @else {
+            <div class="apt-card__img apt-card__img--placeholder">🦷</div>
+          }
+
+          <div class="apt-card__body">
+            <div class="apt-card__top">
+              <h3 class="apt-card__title">{{ apt.service.name }}</h3>
+              <span class="apt-card__badge">{{ statusLabel(apt.status) }}</span>
+            </div>
+
+            <p class="apt-card__meta">
+              📅 {{ apt.date | date: 'dd/MM/yyyy' }} &nbsp;·&nbsp; 🕒 {{ apt.startTime }}
+            </p>
+            <p class="apt-card__meta">
+              💲 {{ apt.service.price | currency: 'MXN' : 'symbol' : '1.0-0' }} &nbsp;·&nbsp;
+              ⏱ {{ apt.service.duration }} min
+            </p>
+            @if (apt.notes) {
+              <p class="apt-card__notes">📝 {{ apt.notes }}</p>
+            }
+
+            <div class="apt-card__actions">
+              <button class="btn-sm btn-sm--ghost" (click)="viewDetail(apt.id)">Ver detalle</button>
+              @if (isEditable(apt.status)) {
+                <button class="btn-sm btn-sm--ghost" (click)="openReschedule(apt)">Reagendar</button>
+                <button class="btn-sm btn-sm--danger" (click)="cancelAppointment(apt)">Cancelar</button>
+              }
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>
+
+@if (rescheduling(); as apt) {
+  <app-patient-book
+    [service]="apt.service"
+    [existingAppointmentId]="apt.id"
+    (closed)="closeReschedule()"
+    (saved)="onRescheduled()"
+  ></app-patient-book>
+}

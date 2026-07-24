@@ -1,0 +1,77 @@
+<div class="modal-overlay" (click)="close()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="close()" aria-label="Cerrar">✕</button>
+
+    <div class="modal-service">
+      @if (service.imageUrl) {
+        <img class="modal-service__img" [src]="service.imageUrl" [alt]="service.name" />
+      } @else {
+        <div class="modal-service__img modal-service__img--placeholder">🦷</div>
+      }
+      <div>
+        <h3 class="modal-service__name">{{ service.name }}</h3>
+        <div class="modal-service__meta">
+          <span>{{ service.price | currency: 'MXN' : 'symbol' : '1.0-0' }}</span>
+          <span>·</span>
+          <span>{{ service.duration }} min</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="modal-title">
+      {{ existingAppointmentId ? 'Reagendar cita' : 'Confirmar cita' }}
+    </h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="modal-form">
+      <div class="form-group">
+        <label for="date">Fecha</label>
+        <input id="date" type="date" formControlName="date" [min]="today" class="form-control" />
+      </div>
+
+      @if (form.get('date')?.value) {
+        <div class="form-group">
+          <label>Hora</label>
+
+          @if (checkingAvailability()) {
+            <p class="form-hint">Buscando horarios disponibles…</p>
+          } @else if (availableSlots().length > 0) {
+            <div class="slots-grid">
+              @for (slot of availableSlots(); track slot) {
+                <label class="slot" [class.slot--selected]="form.get('startTime')?.value === slot">
+                  <input type="radio" formControlName="startTime" [value]="slot" class="slot__input" />
+                  {{ slot }}
+                </label>
+              }
+            </div>
+          } @else {
+            <p class="form-hint form-hint--warn">
+              No hay horarios disponibles ese día. Prueba con otra fecha.
+            </p>
+          }
+        </div>
+      }
+
+      <div class="form-group">
+        <label for="notes">Observaciones (opcional)</label>
+        <textarea
+          id="notes"
+          formControlName="notes"
+          class="form-control"
+          rows="3"
+          placeholder="Motivo de la consulta u observaciones…"
+        ></textarea>
+      </div>
+
+      @if (errorMessage()) {
+        <p class="form-hint form-hint--warn">{{ errorMessage() }}</p>
+      }
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn--ghost" (click)="close()">Cancelar</button>
+        <button type="submit" class="btn btn--primary" [disabled]="form.invalid || submitting()">
+          {{ submitting() ? 'Guardando…' : 'Confirmar cita' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

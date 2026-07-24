@@ -1,0 +1,55 @@
+<section class="auth-page">
+  <div class="auth-card">
+    <h1 class="auth-card__title">Iniciar sesión</h1>
+    <p class="auth-card__subtitle">Accede a tu cuenta de Sonrisas Dental</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+      <div class="form__group">
+        <label class="form__label" for="email">Correo electrónico</label>
+        <input
+          id="email"
+          type="email"
+          class="form__input"
+          formControlName="email"
+          autocomplete="email"
+          placeholder="tucorreo@ejemplo.com"
+        />
+        @if (email.invalid && email.touched) {
+          <span class="form__error">
+            @if (email.hasError('required')) { Ingresa tu correo. }
+            @if (email.hasError('email')) { El correo no es válido. }
+          </span>
+        }
+      </div>
+
+      <div class="form__group">
+        <label class="form__label" for="password">Contraseña</label>
+        <input
+          id="password"
+          type="password"
+          class="form__input"
+          formControlName="password"
+          autocomplete="current-password"
+          placeholder="••••••••"
+        />
+        @if (password.invalid && password.touched) {
+          <span class="form__error">Ingresa tu contraseña.</span>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <p class="auth-card__error">{{ errorMessage() }}</p>
+      }
+
+      <button type="submit" class="btn-submit" [disabled]="loading()">
+        @if (loading()) { <span class="spinner"></span> }
+        {{ loading() ? 'Ingresando…' : 'Ingresar' }}
+      </button>
+    </form>
+
+    <p class="auth-card__switch">
+      ¿No tienes cuenta? <a routerLink="/registro">Regístrate aquí</a>
+    </p>
+  </div>
+</section>

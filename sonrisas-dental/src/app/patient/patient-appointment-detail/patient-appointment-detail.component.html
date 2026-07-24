@@ -1,0 +1,52 @@
+<section class="detail container">
+  <button class="back-link" (click)="goBack()">← Volver a mis citas</button>
+
+  @if (loading()) {
+    <p class="empty-state">Cargando detalle…</p>
+  } @else if (notFound()) {
+    <div class="empty-state">
+      <p>No encontramos esta cita.</p>
+      <a class="btn btn--primary" routerLink="/paciente/citas">Ver mis citas</a>
+    </div>
+  } @else if (appointment(); as apt) {
+    <article class="detail-card">
+      <div class="detail-card__header">
+        @if (apt.service.imageUrl) {
+          <img class="detail-card__img" [src]="apt.service.imageUrl" [alt]="apt.service.name" />
+        } @else {
+          <div class="detail-card__img detail-card__img--placeholder">🦷</div>
+        }
+        <div>
+          <h1 class="detail-card__title">{{ apt.service.name }}</h1>
+          <span class="detail-card__badge" [ngClass]="statusClass(apt.status)">
+            {{ statusLabel(apt.status) }}
+          </span>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-block">
+          <h2 class="detail-block__title">Información del paciente</h2>
+          <p><strong>Nombre:</strong> {{ user()?.firstName }} {{ user()?.lastName }}</p>
+          <p><strong>Correo:</strong> {{ user()?.email }}</p>
+          @if (user()?.phone) {
+            <p><strong>Teléfono:</strong> {{ user()?.phone }}</p>
+          }
+        </div>
+
+        <div class="detail-block">
+          <h2 class="detail-block__title">Información de la cita</h2>
+          <p><strong>Fecha:</strong> {{ apt.date | date: 'dd/MM/yyyy' }}</p>
+          <p><strong>Hora:</strong> {{ apt.startTime }}</p>
+          <p><strong>Precio:</strong> {{ apt.service.price | currency: 'MXN' : 'symbol' : '1.0-0' }}</p>
+          <p><strong>Duración:</strong> {{ apt.service.duration }} min</p>
+        </div>
+      </div>
+
+      <div class="detail-block">
+        <h2 class="detail-block__title">Observaciones</h2>
+        <p class="detail-notes">{{ apt.notes || 'Sin observaciones.' }}</p>
+      </div>
+    </article>
+  }
+</section>

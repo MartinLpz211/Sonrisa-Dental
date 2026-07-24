@@ -1,0 +1,167 @@
+<div class="services-admin">
+  <header class="services-admin__intro">
+    <div>
+      <h1>Servicios Dentales</h1>
+      <p>Consulta, crea, edita y administra el estado de los servicios ofrecidos.</p>
+    </div>
+    <button type="button" class="btn btn--primary" (click)="openCreate()">+ Nuevo servicio</button>
+  </header>
+
+  @if (feedback()) {
+    <div class="toast">{{ feedback() }}</div>
+  }
+
+  <!-- Barra de búsqueda y filtros -->
+  <div class="toolbar">
+    <input
+      type="text"
+      class="toolbar__search"
+      placeholder="Buscar por nombre…"
+      [value]="searchTerm()"
+      (input)="onSearchInput($any($event.target).value)"
+    />
+
+    <select
+      class="toolbar__filter"
+      [value]="statusFilter()"
+      (change)="onStatusFilterChange($any($event.target).value)"
+    >
+      <option value="all">Todos los estados</option>
+      <option value="active">Activos</option>
+      <option value="inactive">Inactivos</option>
+    </select>
+  </div>
+
+  @if (loading()) {
+    <div class="state">Cargando servicios…</div>
+  } @else if (error()) {
+    <div class="state state--error">
+      {{ error() }}
+      <button type="button" (click)="loadServices()">Reintentar</button>
+    </div>
+  } @else if (services().length === 0) {
+    <div class="state">No se encontraron servicios con esos criterios.</div>
+  } @else {
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Servicio</th>
+            <th>Precio</th>
+            <th>Duración</th>
+            <th>Citas</th>
+            <th>Estado</th>
+            <th class="table__actions-col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (service of services(); track service.id) {
+            <tr [class.table__row--inactive]="!service.isActive">
+              <td class="table__service">
+                @if (service.imageUrl) {
+                  <img class="table__thumb" [src]="service.imageUrl" [alt]="service.name" />
+                } @else {
+                  <div class="table__thumb table__thumb--placeholder">🦷</div>
+                }
+                <div>
+                  <div class="table__name">{{ service.name }}</div>
+                  <div class="table__description">{{ service.description }}</div>
+                </div>
+              </td>
+              <td>{{ formatPrice(service.price) }}</td>
+              <td>{{ formatDuration(service.duration) }}</td>
+              <td>{{ service.totalAppointments }}</td>
+              <td>
+                <span class="badge" [class.badge--active]="service.isActive" [class.badge--inactive]="!service.isActive">
+                  {{ service.isActive ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="table__actions">
+                <button type="button" class="btn btn--ghost" (click)="openEdit(service)">Editar</button>
+                <button
+                  type="button"
+                  class="btn"
+                  [class.btn--danger]="service.isActive"
+                  [class.btn--success]="!service.isActive"
+                  [disabled]="togglingId() === service.id"
+                  (click)="toggleActive(service)"
+                >
+                  {{ togglingId() === service.id ? '...' : (service.isActive ? 'Desactivar' : 'Reactivar') }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (pagination(); as p) {
+      <div class="pagination">
+        <button type="button" [disabled]="p.page <= 1" (click)="goToPage(p.page - 1)">← Anterior</button>
+        <span>Página {{ p.page }} de {{ p.totalPages }} · {{ p.total }} servicios</span>
+        <button type="button" [disabled]="p.page >= p.totalPages" (click)="goToPage(p.page + 1)">Siguiente →</button>
+      </div>
+    }
+  }
+
+  <!-- Modal de creación / edición -->
+  @if (modalMode()) {
+    <div class="modal-backdrop" (click)="closeModal()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h2>{{ modalMode() === 'create' ? 'Nuevo servicio' : 'Editar servicio' }}</h2>
+
+        <form [formGroup]="serviceForm" (ngSubmit)="save()">
+          <div class="field">
+            <label for="name">Nombre</label>
+            <input id="name" type="text" formControlName="name" />
+            @if (serviceForm.get('name')?.invalid && serviceForm.get('name')?.touched) {
+              <small class="field__error">El nombre es obligatorio.</small>
+            }
+          </div>
+
+          <div class="field">
+            <label for="description">Descripción</label>
+            <textarea id="description" rows="3" formControlName="description"></textarea>
+            @if (serviceForm.get('description')?.invalid && serviceForm.get('description')?.touched) {
+              <small class="field__error">La descripción es obligatoria.</small>
+            }
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="price">Precio (MXN)</label>
+              <input id="price" type="number" min="0" step="0.01" formControlName="price" />
+              @if (serviceForm.get('price')?.invalid && serviceForm.get('price')?.touched) {
+                <small class="field__error">Precio inválido.</small>
+              }
+            </div>
+
+            <div class="field">
+              <label for="duration">Duración (min)</label>
+              <input id="duration" type="number" min="1" step="1" formControlName="duration" />
+              @if (serviceForm.get('duration')?.invalid && serviceForm.get('duration')?.touched) {
+                <small class="field__error">Duración inválida.</small>
+              }
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="imageUrl">URL de imagen (opcional)</label>
+            <input id="imageUrl" type="text" formControlName="imageUrl" placeholder="https://…" />
+          </div>
+
+          @if (formError()) {
+            <p class="field__error field__error--form">{{ formError() }}</p>
+          }
+
+          <div class="modal__actions">
+            <button type="button" class="btn btn--ghost" (click)="closeModal()">Cancelar</button>
+            <button type="submit" class="btn btn--primary" [disabled]="saving()">
+              {{ saving() ? 'Guardando…' : 'Guardar' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

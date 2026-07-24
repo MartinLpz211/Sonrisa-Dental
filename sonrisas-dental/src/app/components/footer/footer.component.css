@@ -1,0 +1,126 @@
+/* ── Footer ──────────────────────────────────────── */
+.footer {
+  background: linear-gradient(160deg, #0D1B4B 0%, #1565C0 100%);
+  color: rgba(255,255,255,0.80);
+  padding: 3.5rem 0 0;
+}
+
+/* ── Grid ────────────────────────────────────────── */
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 2.5rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+/* ── Brand ───────────────────────────────────────── */
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.footer__logo-bird {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 0.25rem;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.30));
+}
+
+.footer__brand-name {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-white);
+}
+
+.footer__tagline {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.60);
+  margin-top: 0.25rem;
+  max-width: 220px;
+  line-height: 1.5;
+}
+
+/* ── Nav ─────────────────────────────────────────── */
+.footer__nav-title {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 1rem;
+}
+
+.footer__nav ul,
+.footer__contact ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.footer__nav a,
+.footer__contact a {
+  font-size: 0.93rem;
+  color: rgba(255,255,255,0.75);
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+.footer__nav a:hover,
+.footer__contact a:hover {
+  color: var(--color-white);
+  text-decoration: underline;
+}
+
+.footer__contact li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.93rem;
+  color: rgba(255,255,255,0.75);
+}
+
+/* ── Bottom bar ──────────────────────────────────── */
+.footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 0;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.footer__bottom p {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.50);
+}
+
+.footer__credit {
+  font-weight: 600;
+}
+
+/* ── Responsive ──────────────────────────────────── */
+@media (max-width: 768px) {
+  .footer__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer__bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+}

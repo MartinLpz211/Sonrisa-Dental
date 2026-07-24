@@ -1,0 +1,130 @@
+<header class="header" [class.header--scrolled]="scrolled()">
+  <div class="header__inner container">
+
+    <!-- ── Logo ─────────────────────────────────────── -->
+    <a class="logo" (click)="scrollTo('inicio')" role="button" tabindex="0">
+      <!-- Chorlito egipcio (Egyptian Plover) SVG logo -->
+      <svg
+        class="logo__bird"
+        viewBox="0 0 64 64"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Chorlito egipcio — logo de Sonrisas"
+        role="img"
+      >
+        <!-- Cola / Tail -->
+        <ellipse cx="13" cy="38" rx="9" ry="4" transform="rotate(-20 13 38)" fill="#546E7A"/>
+
+        <!-- Cuerpo principal / Body -->
+        <ellipse cx="32" cy="36" rx="16" ry="11" fill="#B0BEC5"/>
+
+        <!-- Pecho blanco / White breast -->
+        <ellipse cx="36" cy="39" rx="9" ry="7" fill="#ECEFF1"/>
+
+        <!-- Ala — franja negra / Black wing stripe -->
+        <path d="M18 30 Q32 22 46 28 Q40 32 26 34 Z" fill="#37474F"/>
+
+        <!-- Cabeza / Head -->
+        <ellipse cx="46" cy="28" rx="10" ry="9" fill="#455A64"/>
+
+        <!-- Corona naranja / Orange crown -->
+        <ellipse cx="46" cy="22" rx="6" ry="4" fill="#FF8F00"/>
+
+        <!-- Ceja blanca / White supercilium -->
+        <path d="M38 24 Q46 20 54 24" stroke="#ECEFF1" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+        <!-- Mejilla blanca / White cheek -->
+        <ellipse cx="50" cy="29" rx="5" ry="3.5" fill="#ECEFF1"/>
+
+        <!-- Ojo / Eye -->
+        <circle cx="50" cy="26" r="2.2" fill="#1A237E"/>
+        <circle cx="51" cy="25.3" r="0.7" fill="white"/>
+
+        <!-- Pico / Beak -->
+        <path d="M56 28 L64 27 L56 30 Z" fill="#FF8F00"/>
+
+        <!-- Patas / Legs -->
+        <line x1="32" y1="46" x2="30" y2="56" stroke="#FF8F00" stroke-width="2" stroke-linecap="round"/>
+        <line x1="30" y1="56" x2="26" y2="58" stroke="#FF8F00" stroke-width="2" stroke-linecap="round"/>
+        <line x1="30" y1="56" x2="30" y2="60" stroke="#FF8F00" stroke-width="2" stroke-linecap="round"/>
+        <line x1="38" y1="46" x2="36" y2="55" stroke="#FF8F00" stroke-width="2" stroke-linecap="round"/>
+        <line x1="36" y1="55" x2="32" y2="57" stroke="#FF8F00" stroke-width="2" stroke-linecap="round"/>
+        <line x1="36" y1="55" x2="36" y2="59" stroke="#FF8F00" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- Pequeño diente en el pico (guiño dental) / Tiny tooth wink -->
+        <rect x="59" y="27.5" width="3" height="2.5" rx="0.6" fill="white" opacity="0.9"/>
+      </svg>
+
+      <span class="logo__text">Sonrisas</span>
+    </a>
+
+    <!-- ── Hamburger (mobile) ──────────────────────── -->
+    <button
+      class="hamburger"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="menuOpen()"
+      aria-label="Abrir menú"
+    >
+      <span class="hamburger__bar" [class.open]="menuOpen()"></span>
+      <span class="hamburger__bar" [class.open]="menuOpen()"></span>
+      <span class="hamburger__bar" [class.open]="menuOpen()"></span>
+    </button>
+
+    <!-- ── Navigation ─────────────────────────────── -->
+    <nav class="nav" [class.nav--open]="menuOpen()" role="navigation">
+      @if (isPatientNav()) {
+        <!-- Menú del paciente logueado -->
+        <ul class="nav__list">
+          <li>
+            <a class="nav__link" routerLink="/paciente" (click)="closeMenu()">Inicio</a>
+          </li>
+          <li>
+            <a class="nav__link" routerLink="/paciente/servicios" (click)="closeMenu()">Agendar cita</a>
+          </li>
+          <li>
+            <a class="nav__link" routerLink="/paciente/citas" (click)="closeMenu()">Mis citas</a>
+          </li>
+          <li>
+            <a class="nav__link" routerLink="/paciente/perfil" (click)="closeMenu()">Mi perfil</a>
+          </li>
+          <li>
+            <a class="nav__link" routerLink="/paciente/notificaciones" (click)="closeMenu()">Notificaciones</a>
+          </li>
+          <li>
+            <a class="nav__link nav__link--cta" (click)="logout()" tabindex="0">Cerrar sesión</a>
+          </li>
+        </ul>
+      } @else {
+        <!-- Menú público (marketing) -->
+        <ul class="nav__list">
+          <li>
+            <a class="nav__link" (click)="scrollTo('inicio')" tabindex="0">Inicio</a>
+          </li>
+          <li>
+            <a class="nav__link" (click)="scrollTo('servicios')" tabindex="0">Servicios</a>
+          </li>
+          <li>
+            <a class="nav__link" (click)="scrollTo('nosotros')" tabindex="0">Nosotros</a>
+          </li>
+          <li>
+            <a class="nav__link" (click)="scrollTo('contacto')" tabindex="0">Contacto</a>
+          </li>
+          <li>
+            <a
+              class="nav__link nav__link--cta"
+              (click)="scrollTo('contacto')"
+              tabindex="0"
+            >Agendar cita</a>
+          </li>
+          <li>
+            @if (authService.isLoggedIn()) {
+              <a class="nav__link" routerLink="{{ homeRoute }}" (click)="closeMenu()">Mi panel</a>
+            } @else {
+              <a class="nav__link" routerLink="/login" (click)="closeMenu()">Iniciar sesión</a>
+            }
+          </li>
+        </ul>
+      }
+    </nav>
+
+  </div>
+</header>

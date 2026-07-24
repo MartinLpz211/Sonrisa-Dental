@@ -1,0 +1,90 @@
+<div class="appointments-admin">
+  <header class="appointments-admin__intro">
+    <h1>Citas</h1>
+    <p>Consulta y filtra todas las citas registradas.</p>
+  </header>
+
+  <!-- Filtros -->
+  <div class="toolbar">
+    <input
+      type="text"
+      class="toolbar__search"
+      placeholder="Buscar por paciente (nombre o correo)…"
+      [value]="searchTerm()"
+      (input)="onSearchInput($any($event.target).value)"
+    />
+
+    <select class="toolbar__filter" [value]="serviceFilter() ?? ''" (change)="onServiceFilterChange($any($event.target).value)">
+      <option value="">Todos los servicios</option>
+      @for (service of serviceOptions(); track service.id) {
+        <option [value]="service.id">{{ service.name }}</option>
+      }
+    </select>
+
+    <select class="toolbar__filter" [value]="statusFilter()" (change)="onStatusFilterChange($any($event.target).value)">
+      <option value="all">Todos los estados</option>
+      @for (status of statusOptions; track status) {
+        <option [value]="status">{{ statusLabel(status) }}</option>
+      }
+    </select>
+
+    <input
+      type="date"
+      class="toolbar__filter"
+      [value]="dateFilter()"
+      (change)="onDateFilterChange($any($event.target).value)"
+    />
+
+    <button type="button" class="btn btn--ghost" (click)="clearFilters()">Limpiar filtros</button>
+  </div>
+
+  @if (loading()) {
+    <div class="state">Cargando citas…</div>
+  } @else if (error()) {
+    <div class="state state--error">
+      {{ error() }}
+      <button type="button" (click)="loadAppointments()">Reintentar</button>
+    </div>
+  } @else if (appointments().length === 0) {
+    <div class="state">No se encontraron citas con esos criterios.</div>
+  } @else {
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Paciente</th>
+            <th>Servicio</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Estado</th>
+            <th>Observaciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (appt of appointments(); track appt.id) {
+            <tr>
+              <td class="table__name">{{ appt.patient.firstName }} {{ appt.patient.lastName }}</td>
+              <td>{{ appt.service.name }}</td>
+              <td>{{ formatDate(appt.date) }}</td>
+              <td>{{ appt.startTime }}</td>
+              <td>
+                <span class="badge" [class]="'badge--' + appt.status.toLowerCase()">
+                  {{ statusLabel(appt.status) }}
+                </span>
+              </td>
+              <td class="table__notes">{{ appt.notes || '—' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (pagination(); as p) {
+      <div class="pagination">
+        <button type="button" [disabled]="p.page <= 1" (click)="goToPage(p.page - 1)">← Anterior</button>
+        <span>Página {{ p.page }} de {{ p.totalPages }} · {{ p.total }} citas</span>
+        <button type="button" [disabled]="p.page >= p.totalPages" (click)="goToPage(p.page + 1)">Siguiente →</button>
+      </div>
+    }
+  }
+</div>

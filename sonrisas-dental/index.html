@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Tareas Básica</title>
+</head>
+<body>
+
+    <h1>Mis Tareas</h1>
+    <p>Total de tareas: <span id="contador">0</span></p>
+
+    <input type="text" id="inputTarea" placeholder="Escribe tu tarea aqui">
+    <button id="btnAnadir">Agregar Tarea</button>
+
+    <ul id="listaTareas"></ul>
+
+    <script>
+        // constantes
+        const inputTarea = document.getElementById('inputTarea');
+        const btnAnadir = document.getElementById('btnAnadir');
+        const listaTareas = document.getElementById('listaTareas');
+        const contador = document.getElementById('contador');
+
+        // Variable para contar las tareas
+        let total = 0;
+
+        // Función principal para agregar tarea
+        function agregarTarea() {
+            const texto = inputTarea.value.trim();
+
+            // Validación de alerta si no se agraga ningun tarea
+            if (texto === "") {
+                alert("Escribe tu tarea antes de precionar el boton tonto.");
+                return;
+            }
+
+            // Crear el elemento de la lista
+            const nuevoLi = document.createElement('li');
+            nuevoLi.textContent = texto + " "; // Añade el texto de la tarea
+
+            // Crear el botón de eliminar para esta tarea
+            const btnEliminar = document.createElement('button');
+            btnEliminar.textContent = "Eliminiar Tarea";
+
+            // Acción para eliminar al hacer clic en el boton de eliminar tarea
+            btnEliminar.onclick = function() {
+                listaTareas.removeChild(nuevoLi); // Borra la tarea de la pantalla
+                total--;                          // Resta 1 en el contador
+                contador.textContent = total;     // Actualiza el contador
+            };
+
+            // Juntar el botón de eliminar con la tarea, y meterlo a la lista
+            nuevoLi.appendChild(btnEliminar);
+            listaTareas.appendChild(nuevoLi);
+
+            // Sumar al contador en pantalla
+            total++;
+            contador.textContent = total;
+
+            // LIMPIAR EL CAMPO DE TEXTO
+            inputTarea.value = "";
+            inputTarea.focus();
+        }
+
+        // Asignar el clic del botón a la función
+        btnAnadir.onclick = agregarTarea;
+    </script>
+
+</body>
+</html>

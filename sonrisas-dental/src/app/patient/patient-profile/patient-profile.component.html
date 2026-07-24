@@ -1,0 +1,93 @@
+<section class="page-header container">
+  <span class="section-label">Tu cuenta</span>
+  <h1 class="section-title">Mi perfil</h1>
+</section>
+
+@if (message(); as msg) {
+  <div class="container">
+    <div class="alert" [class.alert--error]="msg.type === 'error'">{{ msg.text }}</div>
+  </div>
+}
+
+<section class="profile container">
+  <article class="profile-card">
+    <div class="profile-card__header">
+      <div class="avatar">{{ initials() }}</div>
+      <div>
+        <h2 class="profile-card__name">{{ user()?.firstName }} {{ user()?.lastName }}</h2>
+        <p class="profile-card__email">{{ user()?.email }}</p>
+        @if (user()?.createdAt) {
+          <p class="profile-card__since">Paciente desde {{ user()?.createdAt | date: 'MMMM yyyy' }}</p>
+        }
+      </div>
+    </div>
+
+    @if (!editing()) {
+      <div class="profile-info">
+        <div class="profile-info__row">
+          <span class="profile-info__label">Teléfono</span>
+          <span>{{ user()?.phone || '—' }}</span>
+        </div>
+        <div class="profile-info__row">
+          <span class="profile-info__label">Fecha de nacimiento</span>
+          <span>{{ (user()?.birthDate | date: 'dd/MM/yyyy') || '—' }}</span>
+        </div>
+      </div>
+
+      <div class="profile-card__actions">
+        <button class="btn btn--primary" (click)="startEditing()">Editar perfil</button>
+        <button class="btn btn--ghost" (click)="togglePasswordForm()">Cambiar contraseña</button>
+      </div>
+    } @else {
+      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="profile-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">Nombre</label>
+            <input id="firstName" type="text" formControlName="firstName" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Apellido</label>
+            <input id="lastName" type="text" formControlName="lastName" class="form-control" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Teléfono</label>
+            <input id="phone" type="tel" formControlName="phone" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label for="birthDate">Fecha de nacimiento</label>
+            <input id="birthDate" type="date" formControlName="birthDate" class="form-control" />
+          </div>
+        </div>
+
+        <div class="profile-card__actions">
+          <button type="button" class="btn btn--ghost" (click)="cancelEditing()">Cancelar</button>
+          <button type="submit" class="btn btn--primary" [disabled]="profileForm.invalid || savingProfile()">
+            {{ savingProfile() ? 'Guardando…' : 'Guardar' }}
+          </button>
+        </div>
+      </form>
+    }
+
+    @if (changingPassword()) {
+      <form [formGroup]="securityForm" (ngSubmit)="savePassword()" class="profile-form profile-form--security">
+        <h3 class="profile-form__title">Cambiar contraseña</h3>
+        <div class="form-group">
+          <label for="currentPassword">Contraseña actual</label>
+          <input id="currentPassword" type="password" formControlName="currentPassword" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label for="newPassword">Nueva contraseña</label>
+          <input id="newPassword" type="password" formControlName="newPassword" class="form-control" />
+        </div>
+        <div class="profile-card__actions">
+          <button type="button" class="btn btn--ghost" (click)="togglePasswordForm()">Cancelar</button>
+          <button type="submit" class="btn btn--primary" [disabled]="securityForm.invalid || savingPassword()">
+            {{ savingPassword() ? 'Guardando…' : 'Guardar' }}
+          </button>
+        </div>
+      </form>
+    }
+  </article>
+</section>

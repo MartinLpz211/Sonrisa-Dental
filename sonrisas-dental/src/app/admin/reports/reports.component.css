@@ -1,0 +1,53 @@
+.reports-admin__intro h1 { font-family: var(--font-display); color: var(--color-dark); font-size: 1.6rem; }
+.reports-admin__intro p { color: var(--color-gray-text); margin: 0.25rem 0 1.5rem; }
+
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+
+.presets { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.chip { padding: 0.4rem 0.9rem; border-radius: 999px; border: 1px solid var(--color-gray-mid); background: var(--color-white); font-size: 0.82rem; font-weight: 600; cursor: pointer; }
+.chip--active { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+
+.range-picker { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.range-picker input { padding: 0.5rem 0.75rem; border: 1px solid var(--color-gray-mid); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 0.85rem; }
+.range-picker span { color: var(--color-gray-text); font-size: 0.85rem; }
+
+.btn { padding: 0.5rem 1rem; border-radius: var(--radius-sm); font-size: 0.82rem; font-weight: 700; border: none; cursor: pointer; }
+.btn--primary { background: var(--color-primary); color: white; }
+
+.state { background: var(--color-white); border-radius: var(--radius-md); padding: 1.5rem; text-align: center; color: var(--color-gray-text); }
+.state--error { color: #C62828; margin-bottom: 1rem; }
+.state--error button { display: block; margin: 1rem auto 0; padding: 0.5rem 1.25rem; background: var(--color-primary); color: white; border-radius: var(--radius-sm); font-weight: 700; border: none; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.card { display: flex; align-items: center; gap: 0.85rem; background: var(--color-white); border-radius: var(--radius-md); padding: 1.1rem; box-shadow: var(--shadow-sm); }
+.card__icon { font-size: 1.6rem; }
+.card__value { font-size: 1.3rem; font-weight: 800; color: var(--color-dark); }
+.card__label { font-size: 0.78rem; color: var(--color-gray-text); }
+
+.reports-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+
+.panel { background: var(--color-white); border-radius: var(--radius-md); padding: 1.25rem; box-shadow: var(--shadow-sm); }
+.panel h2 { font-family: var(--font-display); color: var(--color-dark); font-size: 1.05rem; margin-bottom: 1rem; }
+
+.bar-chart { display: flex; align-items: flex-end; gap: 0.5rem; height: 180px; }
+.bar-chart__col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+.bar-chart__bar { width: 100%; max-width: 22px; background: var(--color-primary); border-radius: 4px 4px 0 0; min-height: 2px; transition: height var(--transition); }
+.bar-chart__label { margin-top: 0.4rem; font-size: 0.68rem; color: var(--color-gray-text); white-space: nowrap; }
+
+.status-list { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; padding: 0; margin: 0; }
+.status-list__top { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--color-text); }
+.status-list__top strong { margin-left: auto; }
+.status-list__dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.status-list__bar { height: 6px; border-radius: 999px; background: var(--color-gray-light); margin-top: 0.35rem; overflow: hidden; }
+.status-list__fill { height: 100%; border-radius: 999px; }
+
+.table-wrap { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.table th { text-align: left; padding: 0.75rem 0.5rem; color: var(--color-gray-text); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--color-gray-mid); }
+.table td { padding: 0.75rem 0.5rem; border-bottom: 1px solid var(--color-gray-light); }
+.table tbody tr:last-child td { border-bottom: none; }
+.table__name { font-weight: 700; color: var(--color-text); }
+
+@media (max-width: 900px) {
+  .reports-grid { grid-template-columns: 1fr; }
+}

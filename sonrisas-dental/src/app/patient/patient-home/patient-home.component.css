@@ -1,0 +1,163 @@
+/* ── Hero ────────────────────────────────────────── */
+.patient-hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1565C0 0%, #2196F3 55%, #42A5F5 100%);
+  padding: 7rem 0 4rem;
+}
+
+.patient-hero__blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.patient-hero__blob--1 {
+  width: 420px;
+  height: 420px;
+  background: rgba(255, 255, 255, 0.06);
+  top: -140px;
+  right: -80px;
+}
+
+.patient-hero__blob--2 {
+  width: 260px;
+  height: 260px;
+  background: rgba(255, 255, 255, 0.05);
+  bottom: -100px;
+  left: -60px;
+}
+
+.patient-hero__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.patient-hero .section-label {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.patient-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  font-weight: 800;
+  color: var(--color-white);
+  margin: 0.5rem 0 0.5rem;
+}
+
+.patient-hero__desc {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.88);
+  margin-bottom: 2rem;
+}
+
+.patient-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.8rem 1.6rem;
+  font-size: 0.98rem;
+  font-weight: 700;
+  border-radius: 100px;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+.btn--primary {
+  background: var(--color-white);
+  color: var(--color-primary-dark);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn--primary:hover {
+  background: #FFF9C4;
+  transform: translateY(-3px);
+}
+
+.btn--ghost {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-white);
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(6px);
+}
+
+.btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-3px);
+}
+
+/* ── Summary cards ───────────────────────────────── */
+.summary {
+  padding: 3rem 1.5rem 4rem;
+  margin-top: -2.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.summary__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.summary-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.summary-card__icon {
+  font-size: 1.6rem;
+}
+
+.summary-card__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-gray-text);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.summary-card__value {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--color-dark);
+}
+
+.summary-card__value--muted {
+  color: var(--color-gray-text);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.summary-card__value--ok {
+  color: #2E7D32;
+}
+
+.summary-card__hint {
+  font-size: 0.85rem;
+  color: var(--color-gray-text);
+}
+
+@media (max-width: 480px) {
+  .patient-hero__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

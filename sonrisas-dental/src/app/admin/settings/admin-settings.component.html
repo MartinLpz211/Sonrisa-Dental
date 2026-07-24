@@ -1,0 +1,109 @@
+<div class="settings-container">
+  <div class="header">
+    <h1 class="section-title">Configuración</h1>
+    <p class="section-subtitle">Gestiona tu perfil, seguridad, preferencias y los ajustes de la clínica.</p>
+  </div>
+
+  <div class="alert" [ngClass]="message.type" *ngIf="message">
+    {{ message.text }}
+  </div>
+
+  <div class="settings-layout">
+    <aside class="settings-sidebar">
+      <ul>
+        <li [class.active]="activeTab === 'profile'" (click)="setTab('profile')">Perfil</li>
+        <li [class.active]="activeTab === 'security'" (click)="setTab('security')">Seguridad</li>
+        <li [class.active]="activeTab === 'preferences'" (click)="setTab('preferences')">Preferencias</li>
+        <li [class.active]="activeTab === 'clinic'" (click)="setTab('clinic')">Ajustes de la Clínica</li>
+      </ul>
+    </aside>
+
+    <main class="settings-content">
+      <!-- Profile Tab -->
+      <section *ngIf="activeTab === 'profile'" class="tab-pane">
+        <h2>Datos del Perfil</h2>
+        <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()" class="settings-form">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" formControlName="firstName" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Apellido</label>
+            <input type="text" formControlName="lastName" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" formControlName="phone" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Fecha de Nacimiento</label>
+            <input type="date" formControlName="birthDate" class="form-control">
+          </div>
+          <button type="submit" class="btn-primary" [disabled]="profileForm.invalid">Guardar Cambios</button>
+        </form>
+      </section>
+
+      <!-- Security Tab -->
+      <section *ngIf="activeTab === 'security'" class="tab-pane">
+        <h2>Seguridad</h2>
+        <form [formGroup]="securityForm" (ngSubmit)="onSecuritySubmit()" class="settings-form">
+          <div class="form-group">
+            <label>Contraseña Actual</label>
+            <input type="password" formControlName="currentPassword" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Nueva Contraseña</label>
+            <input type="password" formControlName="newPassword" class="form-control">
+          </div>
+          <button type="submit" class="btn-primary" [disabled]="securityForm.invalid">Actualizar Contraseña</button>
+        </form>
+      </section>
+
+      <!-- Preferences Tab -->
+      <section *ngIf="activeTab === 'preferences'" class="tab-pane">
+        <h2>Preferencias</h2>
+        <form [formGroup]="preferencesForm" (ngSubmit)="onPreferencesSubmit()" class="settings-form">
+          <div class="form-group">
+            <label>Idioma</label>
+            <select formControlName="language" class="form-control">
+              <option value="es">Español</option>
+              <option value="en">Inglés</option>
+            </select>
+          </div>
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" formControlName="notificationsEnabled">
+              Recibir notificaciones por correo electrónico
+            </label>
+          </div>
+          <button type="submit" class="btn-primary" [disabled]="preferencesForm.invalid">Guardar Preferencias</button>
+        </form>
+      </section>
+
+      <!-- Clinic Settings Tab -->
+      <section *ngIf="activeTab === 'clinic'" class="tab-pane">
+        <h2>Ajustes de la Clínica</h2>
+        <form [formGroup]="clinicForm" (ngSubmit)="onClinicSubmit()" class="settings-form">
+          <div class="form-group">
+            <label>Nombre de la Clínica</label>
+            <input type="text" formControlName="name" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Teléfono de Contacto</label>
+            <input type="tel" formControlName="phone" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Dirección</label>
+            <input type="text" formControlName="address" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Horarios de Atención</label>
+            <input type="text" formControlName="openingHours" class="form-control" placeholder="Ej. Lunes a Viernes 09:00 - 18:00">
+          </div>
+          <button type="submit" class="btn-primary" [disabled]="clinicForm.invalid">Guardar Ajustes</button>
+        </form>
+      </section>
+
+    </main>
+  </div>
+</div>

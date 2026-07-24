@@ -1,0 +1,123 @@
+.appointments-admin__intro h1 {
+  font-family: var(--font-display);
+  color: var(--color-dark);
+  font-size: 1.6rem;
+}
+.appointments-admin__intro p {
+  color: var(--color-gray-text);
+  margin-top: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.toolbar {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+.toolbar__search {
+  flex: 1;
+  min-width: 220px;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--color-gray-mid);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+}
+.toolbar__search:focus { outline: none; border-color: var(--color-primary); }
+.toolbar__filter {
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--color-gray-mid);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  background: var(--color-white);
+}
+
+.state {
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  padding: 2.5rem;
+  text-align: center;
+  color: var(--color-gray-text);
+}
+.state--error { color: #C62828; }
+.state--error button {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 0.5rem 1.25rem;
+  background: var(--color-primary);
+  color: white;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+}
+
+.table-wrap {
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  overflow-x: auto;
+}
+.table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.table th {
+  text-align: left;
+  padding: 0.85rem 1rem;
+  color: var(--color-gray-text);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--color-gray-mid);
+  white-space: nowrap;
+}
+.table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--color-gray-light);
+}
+.table tbody tr:last-child td { border-bottom: none; }
+.table__name { font-weight: 700; color: var(--color-text); }
+.table__notes { color: var(--color-gray-text); max-width: 260px; white-space: normal; }
+
+.badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.badge--pendiente  { color: #E65100; background: #FFF3E0; }
+.badge--confirmada { color: #1565C0; background: #E3F2FD; }
+.badge--completada { color: #2E7D32; background: #E8F5E9; }
+.badge--cancelada  { color: #C62828; background: #FFEBEE; }
+.badge--reagendada { color: #6A1B9A; background: #F3E5F5; }
+
+.btn {
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition: opacity var(--transition);
+}
+.btn--ghost {
+  background: transparent;
+  color: var(--color-primary-dark);
+  border: 1px solid var(--color-gray-mid);
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--color-gray-text);
+}
+.pagination button {
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-gray-mid);
+  background: var(--color-white);
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+.pagination button:disabled { opacity: 0.4; cursor: not-allowed; }

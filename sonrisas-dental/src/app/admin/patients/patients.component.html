@@ -1,0 +1,151 @@
+<div class="patients">
+  <header class="patients__intro">
+    <h1>Pacientes</h1>
+    <p>Consulta, edita y administra el estado de los pacientes registrados.</p>
+  </header>
+
+  @if (feedback()) {
+    <div class="toast">{{ feedback() }}</div>
+  }
+
+  <!-- Barra de búsqueda y filtros -->
+  <div class="toolbar">
+    <input
+      type="text"
+      class="toolbar__search"
+      placeholder="Buscar por nombre, correo o teléfono…"
+      [value]="searchTerm()"
+      (input)="onSearchInput($any($event.target).value)"
+    />
+
+    <select
+      class="toolbar__filter"
+      [value]="statusFilter()"
+      (change)="onStatusFilterChange($any($event.target).value)"
+    >
+      <option value="all">Todos los estados</option>
+      <option value="active">Activos</option>
+      <option value="inactive">Inactivos</option>
+    </select>
+  </div>
+
+  @if (loading()) {
+    <div class="state">Cargando pacientes…</div>
+  } @else if (error()) {
+    <div class="state state--error">
+      {{ error() }}
+      <button type="button" (click)="loadPatients()">Reintentar</button>
+    </div>
+  } @else if (patients().length === 0) {
+    <div class="state">No se encontraron pacientes con esos criterios.</div>
+  } @else {
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Paciente</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Citas</th>
+            <th>Registrado</th>
+            <th>Estado</th>
+            <th class="table__actions-col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (patient of patients(); track patient.id) {
+            <tr [class.table__row--inactive]="!patient.isActive">
+              <td class="table__name">{{ patient.firstName }} {{ patient.lastName }}</td>
+              <td>{{ patient.email }}</td>
+              <td>{{ patient.phone || '—' }}</td>
+              <td>{{ patient.totalAppointments }}</td>
+              <td>{{ formatDate(patient.createdAt) }}</td>
+              <td>
+                <span class="badge" [class.badge--active]="patient.isActive" [class.badge--inactive]="!patient.isActive">
+                  {{ patient.isActive ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="table__actions">
+                <button type="button" class="btn btn--ghost" (click)="openEdit(patient)">Editar</button>
+                <button
+                  type="button"
+                  class="btn"
+                  [class.btn--danger]="patient.isActive"
+                  [class.btn--success]="!patient.isActive"
+                  [disabled]="togglingId() === patient.id"
+                  (click)="toggleActive(patient)"
+                >
+                  {{ togglingId() === patient.id ? '...' : (patient.isActive ? 'Desactivar' : 'Reactivar') }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (pagination(); as p) {
+      <div class="pagination">
+        <button type="button" [disabled]="p.page <= 1" (click)="goToPage(p.page - 1)">← Anterior</button>
+        <span>Página {{ p.page }} de {{ p.totalPages }} · {{ p.total }} pacientes</span>
+        <button type="button" [disabled]="p.page >= p.totalPages" (click)="goToPage(p.page + 1)">Siguiente →</button>
+      </div>
+    }
+  }
+
+  <!-- Modal de edición -->
+  @if (editingPatient(); as patient) {
+    <div class="modal-backdrop" (click)="closeEdit()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h2>Editar paciente</h2>
+
+        <form [formGroup]="editForm" (ngSubmit)="saveEdit()">
+          <div class="field">
+            <label for="firstName">Nombre</label>
+            <input id="firstName" type="text" formControlName="firstName" />
+            @if (editForm.get('firstName')?.invalid && editForm.get('firstName')?.touched) {
+              <small class="field__error">El nombre es obligatorio.</small>
+            }
+          </div>
+
+          <div class="field">
+            <label for="lastName">Apellido</label>
+            <input id="lastName" type="text" formControlName="lastName" />
+            @if (editForm.get('lastName')?.invalid && editForm.get('lastName')?.touched) {
+              <small class="field__error">El apellido es obligatorio.</small>
+            }
+          </div>
+
+          <div class="field">
+            <label for="email">Correo</label>
+            <input id="email" type="email" formControlName="email" />
+            @if (editForm.get('email')?.invalid && editForm.get('email')?.touched) {
+              <small class="field__error">Correo inválido.</small>
+            }
+          </div>
+
+          <div class="field">
+            <label for="phone">Teléfono</label>
+            <input id="phone" type="text" formControlName="phone" />
+          </div>
+
+          <div class="field">
+            <label for="birthDate">Fecha de nacimiento</label>
+            <input id="birthDate" type="date" formControlName="birthDate" />
+          </div>
+
+          @if (editError()) {
+            <p class="field__error field__error--form">{{ editError() }}</p>
+          }
+
+          <div class="modal__actions">
+            <button type="button" class="btn btn--ghost" (click)="closeEdit()">Cancelar</button>
+            <button type="submit" class="btn btn--primary" [disabled]="saving()">
+              {{ saving() ? 'Guardando…' : 'Guardar cambios' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

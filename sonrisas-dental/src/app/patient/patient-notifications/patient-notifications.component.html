@@ -1,0 +1,22 @@
+<section class="page-header container">
+  <span class="section-label">Al día</span>
+  <h1 class="section-title">Notificaciones</h1>
+  <p class="section-subtitle">Novedades sobre tus citas.</p>
+</section>
+
+<section class="notifications container">
+  @if (loading()) {
+    <p class="empty-state">Cargando notificaciones…</p>
+  } @else if (notifications().length === 0) {
+    <p class="empty-state">No tienes notificaciones por ahora.</p>
+  } @else {
+    <ul class="notif-list">
+      @for (n of notifications(); track n.id) {
+        <li class="notif-item">
+          <span class="notif-item__icon">{{ n.icon }}</span>
+          <p class="notif-item__text">{{ n.text }}</p>
+        </li>
+      }
+    </ul>
+  }
+</section>

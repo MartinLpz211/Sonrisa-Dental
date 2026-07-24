@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------
+// ROLES
+// Tabla en vez de enum: permite agregar roles nuevos (ej. "Recepcionista")
+// sin migrar tipos, y satisface el requisito de una entidad "Roles"
+// con relación explícita hacia Usuarios.
+// ---------------------------------------------------------------------
+model Role {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique // "ADMIN" | "PACIENTE"
+  createdAt DateTime @default(now())
+
+  users User[]
+
+  @@map("roles")
+}
+
+// ---------------------------------------------------------------------
+// USUARIOS
+// Un solo modelo para administradores y pacientes; el rol determina
+// los permisos. Evita duplicar lógica de autenticación en dos tablas.
+// ---------------------------------------------------------------------
+model User {
+  id        Int      @id @default(autoincrement())
+  firstName String   @map("first_name")
+  lastName  String   @map("last_name")
+  email     String   @unique
+  password  String // hash de bcrypt, nunca texto plano
+  phone     String?
+  birthDate DateTime? @map("birth_date")
+  isActive  Boolean  @default(true) @map("is_active")
+
+  roleId Int  @map("role_id")
+  role   Role @relation(fields: [roleId], references: [id])
+
+  language             String  @default("es")
+  notificationsEnabled Boolean @default(true) @map("notifications_enabled")
+
+  // Citas donde este usuario es el paciente
+  appointmentsAsPatient Appointment[] @relation("PatientAppointments")
+
+  // Citas que este usuario (admin) confirmó/gestionó
+  appointmentsHandled Appointment[] @relation("HandledAppointments")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+// ---------------------------------------------------------------------
+// SERVICIOS DENTALES
+// ---------------------------------------------------------------------
+model Service {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  price       Decimal  @db.Decimal(10, 2) // nunca Float para dinero
+  duration    Int // duración en minutos
+  imageUrl    String?  @map("image_url")
+  isActive    Boolean  @default(true) @map("is_active")
+
+  appointments Appointment[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("services")
+}
+
+// ---------------------------------------------------------------------
+// CITAS
+// ---------------------------------------------------------------------
+enum AppointmentStatus {
+  PENDIENTE
+  CONFIRMADA
+  CANCELADA
+  COMPLETADA
+  REAGENDADA
+}
+
+model Appointment {
+  id Int @id @default(autoincrement())
+
+  patientId Int  @map("patient_id")
+  patient   User @relation("PatientAppointments", fields: [patientId], references: [id])
+
+  serviceId Int     @map("service_id")
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  date      DateTime // solo la fecha del turno
+  startTime String   @map("start_time") // ej. "09:30" (24h)
+
+  status AppointmentStatus @default(PENDIENTE)
+  notes  String?
+
+  handledById Int?  @map("handled_by_id")
+  handledBy   User? @relation("HandledAppointments", fields: [handledById], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Evita doble reserva del mismo horario (asume un solo consultorio).
+  // Si son varios dentistas en paralelo, lo ajustamos agregando
+  // un modelo Dentist y metiéndolo en este índice.
+  @@unique([date, startTime], name: "unique_slot")
+  @@map("appointments")
+}
+
+// ---------------------------------------------------------------------
+// BLACKLIST DE TOKENS
+// Al hacer logout, guardamos el JWT aquí. El middleware de autenticación
+// rechaza cualquier request cuyo token esté en esta tabla, aunque su
+// firma siga siendo válida. expiresAt permite limpiar filas viejas
+// (el token ya habría expirado solo, así que ya no aporta nada tenerlo).
+// ---------------------------------------------------------------------
+model BlacklistedToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique @db.VarChar(500)
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("blacklisted_tokens")
+}
+
+// ---------------------------------------------------------------------
+// CONFIGURACIÓN DE LA CLÍNICA
+// ---------------------------------------------------------------------
+model ClinicSettings {
+  id           Int      @id @default(autoincrement())
+  name         String
+  phone        String
+  address      String
+  openingHours String   @map("opening_hours")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("clinic_settings")
+}

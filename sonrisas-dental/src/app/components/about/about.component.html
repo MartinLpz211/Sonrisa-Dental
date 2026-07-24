@@ -1,0 +1,50 @@
+<section class="about" id="nosotros">
+  <div class="container">
+    <div class="about__grid">
+
+      <!-- Text block -->
+      <div class="about__content">
+        <span class="section-label">Quiénes somos</span>
+        <h2 class="section-title">Comprometidos con<br/>tu salud bucal</h2>
+        <p class="about__text">
+          Somos un consultorio dental comprometido con ofrecer tratamientos modernos,
+          seguros y personalizados para mejorar la salud bucal de nuestros pacientes.
+        </p>
+        <p class="about__text">
+          Nuestro equipo de especialistas se mantiene en constante actualización para
+          brindarte las mejores técnicas y tecnologías disponibles, todo en un ambiente
+          cálido, limpio y libre de estrés.
+        </p>
+
+        <ul class="about__list">
+          <li>🔬 Tecnología de diagnóstico digital</li>
+          <li>💉 Anestesia sin dolor</li>
+          <li>🧼 Protocolos de esterilización certificados</li>
+          <li>📋 Planes de tratamiento transparentes</li>
+        </ul>
+      </div>
+
+      <!-- Stats & visual block -->
+      <div class="about__visual">
+        <div class="about__card">
+          <div class="about__stats">
+            @for (stat of stats; track stat.label) {
+              <div class="stat">
+                <span class="stat__value">{{ stat.value }}</span>
+                <span class="stat__label">{{ stat.label }}</span>
+              </div>
+            }
+          </div>
+          <div class="about__quote">
+            <span class="about__quote-icon">💬</span>
+            <blockquote>
+              "El cuidado dental no es un lujo, es una inversión en tu calidad de vida."
+            </blockquote>
+            <cite>— Dr. Equipo Sonrisas</cite>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

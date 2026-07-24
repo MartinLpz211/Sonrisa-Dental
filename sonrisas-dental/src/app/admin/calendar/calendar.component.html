@@ -1,0 +1,185 @@
+<div class="calendar-admin">
+  <header class="calendar-admin__intro">
+    <h1>Calendario</h1>
+    <p>Consulta las citas por mes y agenda o reagenda directamente desde aquí.</p>
+  </header>
+
+  @if (feedback()) {
+    <div class="toast">{{ feedback() }}</div>
+  }
+
+  <div class="calendar-nav">
+    <button type="button" class="btn btn--ghost" (click)="prevMonth()">← Mes anterior</button>
+    <h2 class="calendar-nav__label">{{ monthLabel() }}</h2>
+    <button type="button" class="btn btn--ghost" (click)="goToday()">Hoy</button>
+    <button type="button" class="btn btn--ghost" (click)="nextMonth()">Mes siguiente →</button>
+  </div>
+
+  @if (error()) {
+    <div class="state state--error">
+      {{ error() }}
+      <button type="button" (click)="loadMonth()">Reintentar</button>
+    </div>
+  }
+
+  <div class="calendar-grid">
+    @for (label of weekdayLabels; track label) {
+      <div class="calendar-grid__weekday">{{ label }}</div>
+    }
+
+    @for (day of days(); track day.iso) {
+      <button
+        type="button"
+        class="calendar-cell"
+        [class.calendar-cell--muted]="!day.inCurrentMonth"
+        [class.calendar-cell--today]="day.isToday"
+        [class.calendar-cell--past]="day.isPast"
+        (click)="selectDay(day)"
+      >
+        <span class="calendar-cell__num">{{ day.date.getDate() }}</span>
+        @if (day.appointments.length > 0) {
+          <span class="calendar-cell__badge">{{ day.appointments.length }}</span>
+        }
+      </button>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="state">Cargando citas…</div>
+  }
+
+  <!-- Panel lateral del día seleccionado -->
+  @if (selectedDay(); as day) {
+    <div class="modal-backdrop" (click)="closeDayPanel()">
+      <div class="day-panel" (click)="$event.stopPropagation()">
+        <div class="day-panel__header">
+          <h2>{{ day.date.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' }) }}</h2>
+          <button type="button" class="btn btn--ghost" (click)="closeDayPanel()">Cerrar</button>
+        </div>
+
+        @if (!day.isPast) {
+          <button type="button" class="btn btn--primary day-panel__new" (click)="openCreate(day)">
+            + Nueva cita
+          </button>
+        }
+
+        @if (day.appointments.length === 0) {
+          <p class="state">No hay citas este día.</p>
+        } @else {
+          <ul class="day-panel__list">
+            @for (appt of day.appointments; track appt.id) {
+              <li class="day-panel__item">
+                <div>
+                  <strong>{{ appt.startTime }}</strong> — {{ appt.patient.firstName }} {{ appt.patient.lastName }}
+                  <div class="day-panel__service">{{ appt.service.name }}</div>
+                  <span class="badge" [class]="'badge--' + appt.status.toLowerCase()">
+                    {{ statusLabel(appt.status) }}
+                  </span>
+                </div>
+                @if (appt.status !== 'CANCELADA' && appt.status !== 'COMPLETADA') {
+                  <button type="button" class="btn btn--ghost" (click)="openReschedule(appt)">Reagendar</button>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Modal crear / reagendar -->
+  @if (modalMode()) {
+    <div class="modal-backdrop" (click)="closeModal()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h2>{{ modalMode() === 'create' ? 'Nueva cita' : 'Reagendar cita' }}</h2>
+
+        @if (modalMode() === 'create') {
+          <div class="field">
+            <label for="patientSearch">Paciente</label>
+            <input
+              id="patientSearch"
+              type="text"
+              [value]="patientSearch()"
+              (input)="onPatientSearchInput($any($event.target).value)"
+              placeholder="Buscar por nombre o correo…"
+            />
+            @if (patientResults().length > 0) {
+              <ul class="patient-results">
+                @for (p of patientResults(); track p.id) {
+                  <li (click)="pickPatient(p)">{{ p.firstName }} {{ p.lastName }} — {{ p.email }}</li>
+                }
+              </ul>
+            }
+            @if (selectedPatient()) {
+              <small class="field__hint">Seleccionado: {{ selectedPatient()!.firstName }} {{ selectedPatient()!.lastName }}</small>
+            }
+          </div>
+
+          <div class="field">
+            <label for="service">Servicio</label>
+            <select id="service" [value]="selectedServiceId() ?? ''" (change)="onServiceChange($any($event.target).value)">
+              <option value="" disabled>Selecciona un servicio…</option>
+              @for (s of services(); track s.id) {
+                <option [value]="s.id">{{ s.name }}</option>
+              }
+            </select>
+            @if (selectedService(); as svc) {
+              <small class="field__hint">
+                Precio: {{ svc.price | currency:'MXN' }} · Duración: {{ svc.duration }} min
+              </small>
+            }
+          </div>
+        } @else {
+          <p class="field__hint">
+            Servicio: <strong>{{ appointmentBeingRescheduled()?.service?.name }}</strong>
+          </p>
+        }
+
+        <div class="field">
+          <label for="date">Fecha</label>
+          <input id="date" type="date" [value]="formDate()" (change)="onFormDateChange($any($event.target).value)" />
+        </div>
+
+        <div class="field">
+          <label>Horario disponible</label>
+          @if (loadingSlots()) {
+            <p class="field__hint">Consultando horarios…</p>
+          } @else if (availableSlots().length === 0) {
+            <p class="field__hint">Selecciona fecha y servicio para ver horarios.</p>
+          } @else {
+            <div class="slots">
+              @for (slot of availableSlots(); track slot) {
+                <button
+                  type="button"
+                  class="slot"
+                  [class.slot--selected]="selectedSlot() === slot"
+                  (click)="pickSlot(slot)"
+                >
+                  {{ slot }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+
+        @if (modalMode() === 'create') {
+          <div class="field">
+            <label for="notes">Observaciones (opcional)</label>
+            <textarea id="notes" rows="2" [value]="notes()" (input)="notes.set($any($event.target).value)"></textarea>
+          </div>
+        }
+
+        @if (formError()) {
+          <p class="field__error field__error--form">{{ formError() }}</p>
+        }
+
+        <div class="modal__actions">
+          <button type="button" class="btn btn--ghost" (click)="closeModal()">Cancelar</button>
+          <button type="button" class="btn btn--primary" [disabled]="saving()" (click)="save()">
+            {{ saving() ? 'Guardando…' : 'Guardar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
