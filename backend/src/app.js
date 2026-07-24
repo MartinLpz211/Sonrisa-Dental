@@ -17,15 +17,39 @@ const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 const app = express();
 
 // --- Middlewares globales ---
-app.use(cors({ origin: env.corsOrigin, credentials: true }));
+
+// Lista de orígenes permitidos explícitos
+const allowedOrigins = [
+  'http://localhost:4200',
+  'http://localhost:3000',
+  env.corsOrigin // Lee la variable definida en tus variables de entorno
+].filter(Boolean);
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // 1. Permitir peticiones sin origen (como herramientas Postman, curl o consultas server-to-server)
+    if (!origin) return callback(null, true);
+
+    // 2. Verificar si está en la lista explícita o si pertenece a Vercel (.vercel.app)
+    const isAllowed = allowedOrigins.includes(origin) || /\.vercel\.app$/.test(origin);
+
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS bloqueado para el origen: ${origin}`));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 if (env.nodeEnv === 'development') {
   app.use(morgan('dev'));
 }
 
 // --- Rutas ---
-// Cada módulo nuevo (auth, users, services, appointments) agregará
-// una línea aquí: app.use('/api/auth', authRoutes);
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
