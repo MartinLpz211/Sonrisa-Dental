@@ -1,9 +1,11 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { SeoService } from './services/seo.service';
+import { AnalyticsService } from './services/analytics.service';
 
 /**
  * El header/footer del sitio público (marketing) no tiene sentido
@@ -37,12 +39,18 @@ const ROUTES_WITHOUT_PUBLIC_CHROME = ['/admin'];
 export class AppComponent {
   readonly showPublicChrome = signal(true);
 
+  private readonly seo = inject(SeoService);
+  private readonly analytics = inject(AnalyticsService);
+
   constructor(private router: Router) {
     this.updateChromeVisibility(this.router.url);
 
     this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe((e) => {
       this.updateChromeVisibility((e as NavigationEnd).urlAfterRedirects);
     });
+
+    this.seo.init();
+    this.analytics.init();
   }
 
   private updateChromeVisibility(url: string): void {

@@ -1,0 +1,35 @@
+<section class="faq" id="preguntas-frecuentes">
+  <div class="container">
+    <div class="faq__header">
+      <span class="section-label">Dudas frecuentes</span>
+      <h2 class="section-title">Preguntas frecuentes</h2>
+      <p class="faq__subtitle">
+        Resolvemos las dudas más comunes de nuestros pacientes. Si tienes otra
+        pregunta, escríbenos desde la sección de contacto.
+      </p>
+    </div>
+
+    <div class="faq__list">
+      @for (faq of faqs; track faq.question; let i = $index) {
+        <div class="faq__item" [class.faq__item--open]="openIndex() === i">
+          <button
+            class="faq__question"
+            type="button"
+            (click)="toggle(i)"
+            [attr.aria-expanded]="openIndex() === i"
+            [attr.aria-controls]="'faq-answer-' + i"
+          >
+            <span>{{ faq.question }}</span>
+            <span class="faq__icon" aria-hidden="true">{{ openIndex() === i ? '−' : '+' }}</span>
+          </button>
+
+          @if (openIndex() === i) {
+            <div class="faq__answer" [id]="'faq-answer-' + i">
+              <p>{{ faq.answer }}</p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>

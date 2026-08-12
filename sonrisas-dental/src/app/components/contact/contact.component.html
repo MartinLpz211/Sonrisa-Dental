@@ -32,7 +32,7 @@
         <!-- Mapa -->
         <div class="map-wrapper" aria-label="Ubicación del consultorio en Google Maps">
           <iframe
-            src="https://maps.google.com/maps?q=Universidad%20Tecnológica%20de%20Querétaro&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            [src]="mapEmbedUrl"
             width="100%"
             height="100%"
             style="border:0;"
@@ -42,6 +42,15 @@
             title="Ubicación del consultorio"
           ></iframe>
         </div>
+
+        <a
+          class="btn-directions"
+          [href]="directionsUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          📍 Cómo llegar
+        </a>
       </div>
 
       <!-- ── Contact Form ── -->
@@ -58,8 +67,14 @@
             </button>
           </div>
         } @else {
-          <form class="contact__form" (ngSubmit)="onSubmit()" #contactFormRef="ngForm" novalidate>
+          <form class="contact__form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
             <h3 class="form__title">Envíanos un mensaje</h3>
+
+            @if (status() === 'error') {
+              <div class="form-error" role="alert">
+                ⚠️ {{ errorMessage() }}
+              </div>
+            }
 
             <!-- Nombre -->
             <div class="form__group">
@@ -68,12 +83,13 @@
                 class="form__input"
                 id="contact-name"
                 type="text"
-                name="name"
-                [(ngModel)]="form.name"
+                formControlName="name"
                 placeholder="Tu nombre completo"
-                required
                 autocomplete="name"
               />
+              @if (hasError('name')) {
+                <span class="form__error">Ingresa tu nombre (mínimo 2 caracteres).</span>
+              }
             </div>
 
             <!-- Correo -->
@@ -83,12 +99,13 @@
                 class="form__input"
                 id="contact-email"
                 type="email"
-                name="email"
-                [(ngModel)]="form.email"
+                formControlName="email"
                 placeholder="correo@ejemplo.com"
-                required
                 autocomplete="email"
               />
+              @if (hasError('email')) {
+                <span class="form__error">Ingresa un correo electrónico válido.</span>
+              }
             </div>
 
             <!-- Mensaje -->
@@ -97,12 +114,13 @@
               <textarea
                 class="form__input form__textarea"
                 id="contact-message"
-                name="message"
-                [(ngModel)]="form.message"
+                formControlName="message"
                 placeholder="Cuéntanos cómo podemos ayudarte..."
-                required
                 rows="5"
               ></textarea>
+              @if (hasError('message')) {
+                <span class="form__error">Escribe tu mensaje (mínimo 10 caracteres).</span>
+              }
             </div>
 
             <!-- Submit -->

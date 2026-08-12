@@ -1,0 +1,100 @@
+/* ── FAQ Section ─────────────────────────────────── */
+.faq {
+  padding: var(--section-pad);
+  background: var(--color-gray-light);
+}
+
+.faq__header {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 3rem;
+}
+
+.faq__subtitle {
+  margin-top: 1rem;
+  color: var(--color-gray-text);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* ── List ────────────────────────────────────────── */
+.faq__list {
+  max-width: 780px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.faq__item {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-mid);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.faq__item--open {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Question (accordion trigger) ───────────────── */
+.faq__question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: var(--color-text);
+}
+
+.faq__item--open .faq__question {
+  color: var(--color-primary-dark);
+}
+
+.faq__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ── Answer ──────────────────────────────────────── */
+.faq__answer {
+  padding: 0 1.5rem 1.4rem;
+}
+
+.faq__answer p {
+  color: var(--color-gray-text);
+  font-size: 0.96rem;
+  line-height: 1.75;
+}
+
+@media (max-width: 640px) {
+  .faq__question {
+    padding: 1rem 1.1rem;
+    font-size: 0.96rem;
+  }
+
+  .faq__answer {
+    padding: 0 1.1rem 1.1rem;
+  }
+}

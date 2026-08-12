@@ -1,34 +1,54 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
+import { SeoRouteData } from './services/seo.service';
 
 export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./home/home.component').then((m) => m.HomeComponent),
-    title: 'Sonrisas Dental',
+    title: 'Sonrisas Dental — Consultorio dental en Querétaro',
+    data: <SeoRouteData>{
+      description:
+        'Consultorio dental Sonrisas en Querétaro: limpieza dental, ortodoncia, blanqueamiento y extracciones. Agenda tu cita en línea con especialistas certificados.',
+      canonicalPath: '/',
+    },
   },
   {
     path: 'login',
     loadComponent: () => import('./auth/login/login.component').then((m) => m.LoginComponent),
     title: 'Iniciar sesión — Sonrisas Dental',
+    data: <SeoRouteData>{
+      description: 'Inicia sesión en tu cuenta de Sonrisas Dental para gestionar tus citas.',
+      canonicalPath: '/login',
+      noIndex: true,
+    },
   },
   {
     path: 'registro',
     loadComponent: () =>
       import('./auth/register/register.component').then((m) => m.RegisterComponent),
     title: 'Crear cuenta — Sonrisas Dental',
+    data: <SeoRouteData>{
+      description: 'Crea tu cuenta de paciente en Sonrisas Dental y agenda citas en línea.',
+      canonicalPath: '/registro',
+      noIndex: true,
+    },
   },
   {
     path: 'legal',
     loadComponent: () => import('./components/footer/legal/legal.component').then((m) => m.LegalComponent),
     title: 'Términos y Condiciones — Sonrisas Dental',
+    data: <SeoRouteData>{
+      description: 'Términos y condiciones y aviso de privacidad de Sonrisas Dental.',
+      canonicalPath: '/legal',
+    },
   },
   {
     path: 'admin',
     loadComponent: () =>
       import('./admin/admin-layout/admin-layout.component').then((m) => m.AdminLayoutComponent),
     canActivate: [authGuard],
-    data: { roles: ['ADMIN'] },
+    data: { roles: ['ADMIN'], noIndex: true } as SeoRouteData & { roles: string[] },
     children: [
       {
         path: '',
@@ -42,6 +62,7 @@ export const routes: Routes = [
         path: 'pacientes',
         loadComponent: () =>
           import('./admin/patients/patients.component').then((m) => m.PatientsComponent),
+        data: { title: 'Pacientes' },
         title: 'Pacientes — Sonrisas Dental',
       },
       {
@@ -88,7 +109,7 @@ export const routes: Routes = [
         (m) => m.PatientLayoutComponent
       ),
     canActivate: [authGuard],
-    data: { roles: ['PACIENTE'] },
+    data: { roles: ['PACIENTE'], noIndex: true } as SeoRouteData & { roles: string[] },
     children: [
       {
         path: '',

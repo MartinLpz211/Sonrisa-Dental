@@ -49,13 +49,5 @@
       <span class="summary-card__label">Tratamientos realizados</span>
       <span class="summary-card__value">{{ loading() ? '—' : completedCount() }}</span>
     </article>
-
-    <article class="summary-card">
-      <span class="summary-card__icon">✅</span>
-      <span class="summary-card__label">Estado de la cuenta</span>
-      <span class="summary-card__value summary-card__value--ok">
-        {{ user()?.isActive ? 'Activa' : 'Inactiva' }}
-      </span>
-    </article>
   </div>
 </section>
