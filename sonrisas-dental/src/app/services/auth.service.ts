@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, map, catchError, throwError, of } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.production';
 import { User, RoleName } from '../interfaces/user.interface';
 import {
   LoginPayload,

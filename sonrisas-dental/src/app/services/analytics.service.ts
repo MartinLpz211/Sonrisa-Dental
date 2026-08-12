@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.production';
 
 declare global {
   interface Window {

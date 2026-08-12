@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.production';
 
 /** Info pública de la clave del servidor, tal como la devuelve GET /api/crypto/public-key */
 interface ServerPublicKeyInfo {
