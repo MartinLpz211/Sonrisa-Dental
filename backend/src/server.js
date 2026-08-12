@@ -1,6 +1,11 @@
 const app = require('./app');
 const env = require('./config/env');
 const prisma = require('./config/prisma');
+const { initHybridCryptoKeys } = require('./config/hybridCrypto');
+
+// Genera el par de claves ECDH del servidor (y programa su rotación)
+// antes de aceptar tráfico. Vive solo en memoria del proceso.
+initHybridCryptoKeys();
 
 const server = app.listen(env.port, () => {
   console.log(`Servidor escuchando en http://localhost:${env.port}`);

@@ -2,12 +2,19 @@ const { Router } = require('express');
 const { body } = require('express-validator');
 const validate = require('../middleware/validate');
 const { authenticate } = require('../middleware/auth.middleware');
+const { decryptPayload, encryptResponse } = require('../middleware/hybridCrypto.middleware');
 const authController = require('../controllers/auth.controller');
 
 const router = Router();
 
+// decryptPayload va PRIMERO: si el body llegó cifrado, lo descifra y
+// reemplaza req.body con el objeto en claro ANTES de que corran los
+// validadores de express-validator (que esperan {email, password},
+// no el envelope). Si llegó sin cifrar, no hace nada (ver middleware).
 router.post(
   '/register',
+  decryptPayload,
+  encryptResponse,
   [
     body('firstName').trim().notEmpty().withMessage('El nombre es obligatorio.'),
     body('lastName').trim().notEmpty().withMessage('El apellido es obligatorio.'),
@@ -24,6 +31,8 @@ router.post(
 
 router.post(
   '/login',
+  decryptPayload,
+  encryptResponse,
   [
     body('email').isEmail().withMessage('Correo inválido.').normalizeEmail(),
     body('password').notEmpty().withMessage('La contraseña es obligatoria.'),

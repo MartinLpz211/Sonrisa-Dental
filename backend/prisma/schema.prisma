@@ -29,14 +29,14 @@ model Role {
 // los permisos. Evita duplicar lógica de autenticación en dos tablas.
 // ---------------------------------------------------------------------
 model User {
-  id        Int      @id @default(autoincrement())
-  firstName String   @map("first_name")
-  lastName  String   @map("last_name")
-  email     String   @unique
+  id        Int       @id @default(autoincrement())
+  firstName String    @map("first_name")
+  lastName  String    @map("last_name")
+  email     String    @unique
   password  String // hash de bcrypt, nunca texto plano
   phone     String?
   birthDate DateTime? @map("birth_date")
-  isActive  Boolean  @default(true) @map("is_active")
+  isActive  Boolean   @default(true) @map("is_active")
 
   roleId Int  @map("role_id")
   role   Role @relation(fields: [roleId], references: [id])
@@ -50,6 +50,9 @@ model User {
   // Citas que este usuario (admin) confirmó/gestionó
   appointmentsHandled Appointment[] @relation("HandledAppointments")
 
+  // Pagos realizados por este usuario (como paciente)
+  payments Payment[] @relation("PatientPayments")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -60,13 +63,13 @@ model User {
 // SERVICIOS DENTALES
 // ---------------------------------------------------------------------
 model Service {
-  id          Int      @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   name        String
   description String
-  price       Decimal  @db.Decimal(10, 2) // nunca Float para dinero
+  price       Decimal @db.Decimal(10, 2) // nunca Float para dinero
   duration    Int // duración en minutos
-  imageUrl    String?  @map("image_url")
-  isActive    Boolean  @default(true) @map("is_active")
+  imageUrl    String? @map("image_url")
+  isActive    Boolean @default(true) @map("is_active")
 
   appointments Appointment[]
 
@@ -105,6 +108,9 @@ model Appointment {
   handledById Int?  @map("handled_by_id")
   handledBy   User? @relation("HandledAppointments", fields: [handledById], references: [id])
 
+  // Pago asociado a esta cita (máximo uno por cita, ver modelo Payment).
+  payment Payment?
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -113,6 +119,45 @@ model Appointment {
   // un modelo Dentist y metiéndolo en este índice.
   @@unique([date, startTime], name: "unique_slot")
   @@map("appointments")
+}
+
+// ---------------------------------------------------------------------
+// PAGOS
+// Un pago (Stripe, modo prueba) asociado 1-a-1 con una cita. Se crea en
+// estado PENDIENTE al iniciar el checkout y el webhook de Stripe es la
+// única fuente de verdad para moverlo a PAGADO o FALLIDO. El estado de
+// la cita (AppointmentStatus) nunca se mezcla con este enum: cuando el
+// webhook confirma el pago, además de marcar aquí PAGADO, el backend
+// mueve Appointment.status a CONFIRMADA en la misma transacción.
+// ---------------------------------------------------------------------
+enum PaymentStatus {
+  PENDIENTE
+  PAGADO
+  FALLIDO
+  REEMBOLSADO
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+
+  appointmentId Int         @unique @map("appointment_id")
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+
+  userId Int  @map("user_id")
+  user   User @relation("PatientPayments", fields: [userId], references: [id])
+
+  amount   Decimal @db.Decimal(10, 2) // nunca Float para dinero
+  currency String  @default("mxn")
+
+  status PaymentStatus @default(PENDIENTE)
+
+  provider          String  @default("stripe")
+  providerPaymentId String? @map("provider_payment_id") // ID de sesión/PaymentIntent de Stripe
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("payments")
 }
 
 // ---------------------------------------------------------------------
@@ -143,4 +188,21 @@ model ClinicSettings {
   updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@map("clinic_settings")
+}
+
+// ---------------------------------------------------------------------
+// MENSAJES DE CONTACTO
+// Guarda los envíos del formulario público de Contacto (landing) para
+// que el consultorio pueda revisarlos, sin depender de un servicio de
+// correo externo.
+// ---------------------------------------------------------------------
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("contact_messages")
 }

@@ -4,6 +4,7 @@ const morgan = require('morgan');
 
 const env = require('./config/env');
 const healthRoutes = require('./routes/health.routes');
+const cryptoRoutes = require('./routes/crypto.routes');
 const authRoutes = require('./routes/auth.routes');
 const dashboardRoutes = require('./routes/dashboard.routes');
 const patientRoutes = require('./routes/patient.routes');
@@ -12,6 +13,7 @@ const appointmentRoutes = require('./routes/appointment.routes');
 const reportRoutes = require('./routes/report.routes');
 const userRoutes = require('./routes/user.routes');
 const settingsRoutes = require('./routes/settings.routes');
+const contactRoutes = require('./routes/contact.routes');
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 
 const app = express();
@@ -51,6 +53,7 @@ if (env.nodeEnv === 'development') {
 
 // --- Rutas ---
 app.use('/api/health', healthRoutes);
+app.use('/api/crypto', cryptoRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/patients', patientRoutes);
@@ -59,6 +62,7 @@ app.use('/api/appointments', appointmentRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/contact', contactRoutes);
 
 // --- 404 y manejo de errores (siempre al final) ---
 app.use(notFoundHandler);
